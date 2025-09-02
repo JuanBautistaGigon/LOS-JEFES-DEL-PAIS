@@ -1,0 +1,6 @@
+@EstancieroWebApi_HostAddress = http://localhost:5070
+
+GET {{EstancieroWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

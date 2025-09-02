@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EstancieroEntities
+{
+    public class DetallePartidaEntities
+    {
+        public List<int> ListaJugadoresPartida { get; set; }
+        public int NumeroPartida { get; set; }
+        public int DniUsuario { get; set; }
+        public int PosicionActual { get; set; }
+        public int DineroActual { get; set; }
+        public List<MovimientosEntities> ListaMovimientos { get; set; }
+        public int Estado { get; set; } // En juego o Derrotado
+    }
+}

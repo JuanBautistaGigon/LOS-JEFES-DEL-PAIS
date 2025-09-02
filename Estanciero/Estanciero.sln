@@ -8,12 +8,20 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstancieroService", "EstancieroService\EstancieroService.csproj", "{D0750866-CBED-4429-A039-814D549D4A6C}"
 EndProject
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstancieroData", "EstancieroData\EstancieroData.csproj", "{95A2ABE7-48C2-40DF-BFB7-430E320A7639}"
 =======
 <<<<<<< HEAD
+>>>>>>> origin/main
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstancieroRequest", "EstancieroDto\EstancieroRequest.csproj", "{FDB648BB-17D6-4D06-8AA2-E824EDD93A6C}"
-=======
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstancieroEntities", "EstancieroEntities\EstancieroEntities.csproj", "{9327E890-3CFD-4FAD-9D11-4D8F28DF6EC9}"
+<<<<<<< HEAD
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstancieroResponse", "EstancieroResponse\EstancieroResponse.csproj", "{43E9A68E-91C9-4837-A8DA-A9300B2F962D}"
+=======
+>>>>>>> origin/main
 >>>>>>> origin/main
 >>>>>>> origin/main
 EndProject
@@ -32,21 +40,30 @@ Global
 		{D0750866-CBED-4429-A039-814D549D4A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0750866-CBED-4429-A039-814D549D4A6C}.Release|Any CPU.Build.0 = Release|Any CPU
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 		{95A2ABE7-48C2-40DF-BFB7-430E320A7639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95A2ABE7-48C2-40DF-BFB7-430E320A7639}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95A2ABE7-48C2-40DF-BFB7-430E320A7639}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95A2ABE7-48C2-40DF-BFB7-430E320A7639}.Release|Any CPU.Build.0 = Release|Any CPU
 =======
 <<<<<<< HEAD
+>>>>>>> origin/main
 		{FDB648BB-17D6-4D06-8AA2-E824EDD93A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDB648BB-17D6-4D06-8AA2-E824EDD93A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDB648BB-17D6-4D06-8AA2-E824EDD93A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDB648BB-17D6-4D06-8AA2-E824EDD93A6C}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
 		{9327E890-3CFD-4FAD-9D11-4D8F28DF6EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9327E890-3CFD-4FAD-9D11-4D8F28DF6EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9327E890-3CFD-4FAD-9D11-4D8F28DF6EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9327E890-3CFD-4FAD-9D11-4D8F28DF6EC9}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+		{43E9A68E-91C9-4837-A8DA-A9300B2F962D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E9A68E-91C9-4837-A8DA-A9300B2F962D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E9A68E-91C9-4837-A8DA-A9300B2F962D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E9A68E-91C9-4837-A8DA-A9300B2F962D}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+>>>>>>> origin/main
 >>>>>>> origin/main
 >>>>>>> origin/main
 	EndGlobalSection

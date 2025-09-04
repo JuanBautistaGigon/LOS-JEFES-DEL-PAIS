@@ -10,4 +10,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EstancieroDto\EstancieroRequest.csproj" />
+    <ProjectReference Include="..\EstancieroResponse\EstancieroResponse.csproj" />
+    <ProjectReference Include="..\EstancieroService\EstancieroService.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,10 @@
         public int Dni { get; set; }
         public string Nombre { get; set; }
         public string Email { get; set; }
-        public List<EstadisticaEntities> Estadisticas { get; set; }
+        // estadisticas:
+        public int PartidasJugadas { get; set; }
+        public int PartidasGanadas { get; set; }
+        public int PartidasPerdidas { get; set; }
+        public int PartidasPendientes { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EstancieroDto
+namespace EstancieroRequest
 {
     public class UsuarioRequest
     {

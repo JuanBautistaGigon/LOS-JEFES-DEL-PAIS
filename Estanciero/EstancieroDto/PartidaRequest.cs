@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EstancieroDto
+namespace EstancieroRequest
 {
-    internal class PartidaRequest
+    public class PartidaRequest
     {
+
     }
 }

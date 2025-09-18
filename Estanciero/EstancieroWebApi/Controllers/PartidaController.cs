@@ -1,6 +1,19 @@
-﻿namespace EstancieroWebApi.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using EstancieroResponse;
+using EstancieroService;
+using EstancieroRequest;
+namespace EstancieroWebApi.Controllers
 {
-    public class PartidaController
+    [ApiController]
+    [Route("controller")]
+    public class PartidaController : ControllerBase
     {
+        PartidaService partidaService = new PartidaService();
+
+        //[HttpPost]
+        /*public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
+        {
+
+        }*/
     }
 }

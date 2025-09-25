@@ -8,7 +8,6 @@ namespace EstancieroEntities
 {
     public class TurnoEntities
     {
-        public int Id { get; set; }
         public int NumeroTurno { get; set; }
         public int DniJugador { get; set; }
     }

@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 using EstancieroData;
 using EstancieroEntities;
 using EstancieroResponse;
+using EstancieroRequest;
 
 
 namespace EstancieroService
 {
     public class PartidaService
     {
-        public PartidaResponse CrearPartida(List<int> listadni)
+        public PartidaResponse CrearPartida(PartidaRequest partidaRequest)
         {
-            string ruta = Rutas.ObtenerRutaCompletaPartidas();
-            List<PartidaResponse> response = Archivos.DeserealizarJson<PartidaResponse>(ruta);
+            string ruta = Rutas.ObtenerRutaCompletaUsuarios();
+            List<UsuarioEntities> listadnis = Archivos.DeserealizarJson<UsuarioEntities>(ruta);
+
+            PartidaEntities partida = listadnis.FirstOrDefault(x=> x.Dni.Any);
+
+
+
             
         }
 

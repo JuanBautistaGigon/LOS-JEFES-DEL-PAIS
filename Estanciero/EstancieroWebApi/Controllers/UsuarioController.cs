@@ -1,4 +1,5 @@
 ﻿using EstancieroRequest;
+using EstancieroResponse;
 using EstancieroService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,9 +31,9 @@ namespace EstancieroWebApi.Controllers
         public IActionResult AgregarUsuario([FromBody] UsuarioRequest usuarioRequest)
         {
             var resultado = usuarioService.CrearUsuario(usuarioRequest);
-            if (resultado.Exito && ModelState.IsValid)
+            if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.Ok)
             {
-                return Ok(resultado.Data);
+                return Ok(resultado.Mensaje);
             }
             else
             {

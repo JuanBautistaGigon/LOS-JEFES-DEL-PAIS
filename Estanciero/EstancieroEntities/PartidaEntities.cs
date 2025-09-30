@@ -16,7 +16,7 @@ namespace EstancieroEntities
         public int Estado { get; set; } //
         public int TurnoActual { get; set; } // 
         public List<TurnoEntities> ConfiguracionTurnos { get; set; } //
-        public List<TableroEntities> Tablero { get; set; } //no sabemos como manejarlo 
+        public List<TableroEntities> Tablero { get; set; } // 
         public List<int> ListaDni { get; set; } //
         public int? DniGanador { get; set; } //al final 
         public string? MotivoVictoria { get; set; } //al final

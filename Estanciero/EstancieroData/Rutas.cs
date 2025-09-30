@@ -12,7 +12,7 @@ namespace EstancieroData
         
         public static string ObtenerRuta(string nombreArchivo)
         {
-            string rutaArchivo = Path.Combine(parteDeLaRuta, $"{nombreArchivo}.json"); //usuarios, tablero, partidas
+            string rutaArchivo = Path.Combine(parteDeLaRuta, $"{nombreArchivo}.json"); //usuarios, tablero, partida
             string rutaCompleta = Path.GetFullPath(rutaArchivo);
             return rutaCompleta;
         }

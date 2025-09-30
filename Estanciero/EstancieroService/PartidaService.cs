@@ -14,7 +14,7 @@ namespace EstancieroService
     public class PartidaService
     {
         
-        public void CrearPartida(PartidaRequest partidaRequest)
+        public Resultado<PartidaEntities> CrearPartida(PartidaRequest partidaRequest)
         {
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
 
@@ -32,6 +32,7 @@ namespace EstancieroService
             nuevaPartidaEntities.Tablero = new List<TableroEntities>(); //duda
 
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
+            return new Resultado<PartidaEntities> { Mensaje = "Partida creada exitosamente", Exito = true };
  
         }
         

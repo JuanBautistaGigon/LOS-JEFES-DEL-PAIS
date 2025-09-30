@@ -32,7 +32,7 @@ namespace EstancieroWebApi.Controllers
             var resultado = usuarioService.CrearUsuario(usuarioRequest);
             if (resultado.Exito && ModelState.IsValid)
             {
-                return Ok(resultado.Usuario);
+                return Ok(resultado.Data);
             }
             else
             {

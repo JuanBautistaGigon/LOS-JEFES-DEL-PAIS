@@ -17,8 +17,8 @@ namespace EstancieroWebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            partidaService.CrearPartida(partidaRequest);
-            return Ok();
+            var resultado = partidaService.CrearPartida(partidaRequest);
+            return Ok(resultado.Mensaje);
         }
         
     }

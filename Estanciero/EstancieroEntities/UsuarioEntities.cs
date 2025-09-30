@@ -9,5 +9,7 @@
         public DateTime FechaRegistro { get; set; }
         public DateTime? FechaEliminacion { get; set; }
         public EstadisticasJugador EstadisticasJugador { get; set; }
+
+        public int CasilleroActual { get; set; } //preguntar si puede ir aca o a tablero
     }
 }

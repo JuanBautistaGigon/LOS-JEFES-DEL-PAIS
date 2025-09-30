@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace EstancieroEntities
 {
-    public class Resultado
+    public class Resultado<T>
     {
         public bool Exito { get; set; }
         public string Mensaje { get; set; }
-        public UsuarioEntities Usuario { get; set; }
+        public T? Data { get; set; }
     }
 }

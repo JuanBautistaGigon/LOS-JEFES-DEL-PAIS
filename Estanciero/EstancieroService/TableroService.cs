@@ -10,22 +10,6 @@ namespace EstancieroService
 {
     public class TableroService
     {
-<<<<<<< HEAD
-        //public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
-        //                                                              // o debe llegar el numero del dado y sumarlo al actual
-        //{
-        //    int casilleroNuevo = 0;
-        //    string rutaUsuario = Rutas.ObtenerRutaCompletaTablero(); 
-        //    List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
-        //    UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x=> x.Dni == dniJugador);
-
-        //    usuarioAmodificar.CasilleroActual = LanzarDado(usuarioAmodificar.CasilleroActual);
-   
-            
-            
-        //}
-=======
-
         public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
                                                                        // o debe llegar el numero del dado y sumarlo al actual
         {
@@ -38,7 +22,7 @@ namespace EstancieroService
 
             Archivos.ActualizarListaJson(listaUsuarios, "usuarios");  
         }
->>>>>>> origin/main
+
         public int LanzarDado(int casilleroActual)
         {
             int casilleroDestino = 0;

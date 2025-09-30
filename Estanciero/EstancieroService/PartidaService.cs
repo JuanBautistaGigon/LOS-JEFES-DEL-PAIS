@@ -13,20 +13,28 @@ namespace EstancieroService
 {
     public class PartidaService
     {
-        /*
-        public PartidaResponse CrearPartida(PartidaRequest partidaRequest)
+        
+        public void CrearPartida(PartidaRequest partidaRequest)
         {
+            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
 
-            /*string ruta = Rutas.ObtenerRutaCompletaUsuarios();
-            List<UsuarioEntities> listadnis = Archivos.DeserealizarJson<UsuarioEntities>(ruta);
+            PartidaEntities nuevaPartidaEntities = MapeoREQaENT(partidaRequest);
+            nuevaPartidaEntities.NumeroPartida = listaPartidas.Count + 1;
+            nuevaPartidaEntities.FechaInicio = DateTime.Now;
+            nuevaPartidaEntities.Estado = 1;
+            nuevaPartidaEntities.TurnoActual = nuevaPartidaEntities.ListaDni[0];
+            nuevaPartidaEntities.ConfiguracionTurnos = new List<TurnoEntities>(); 
+            for (int i = 0; i < nuevaPartidaEntities.ListaDni.Count(); i++)
+            {
+                TurnoEntities turno = new TurnoEntities { NumeroTurno = i + 1, DniJugador = nuevaPartidaEntities.ListaDni[i] }; 
+                nuevaPartidaEntities.ConfiguracionTurnos.Add(turno);
+            }
+            nuevaPartidaEntities.Tablero = new List<TableroEntities>(); //duda
 
-            PartidaEntities partida = listadnis.FirstOrDefault(x=> x.Dni.Any);
-
-
-
-            
-        };
-        */
+            Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
+ 
+        }
+        
 
         public void CambiarEstadoPartida()
         {
@@ -41,5 +49,13 @@ namespace EstancieroService
         }
 
         // Analizar si es necesario hacer metodos para iniciar y finalizar partida
+
+        private PartidaEntities MapeoREQaENT(PartidaRequest request)
+        {
+            return new PartidaEntities
+            {
+                ListaDni = request.Dnis
+            };
+        }
     }
 }

@@ -9,16 +9,16 @@ namespace EstancieroEntities
 {
     public class PartidaEntities
     {
-        public int NumeroPartida { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime? FechaFin { get; set; }
-        public TimeSpan? Duracion { get; set; }
-        public int Estado { get; set; }
-        public int TurnoActual { get; set; }
-        public List<TurnoEntities> ConfiguracionTurnos { get; set; }
-        public List<TableroEntities> Tablero { get; set; }
-        public List<int> ListaDni { get; set; }
-        public int? DniGanador { get; set; }
-        public string? MotivoVictoria { get; set; }
+        public int NumeroPartida { get; set; } //
+        public DateTime FechaInicio { get; set; } //
+        public DateTime? FechaFin { get; set; } //al final 
+        public TimeSpan? Duracion { get; set; } //al final 
+        public int Estado { get; set; } //
+        public int TurnoActual { get; set; } // 
+        public List<TurnoEntities> ConfiguracionTurnos { get; set; } //
+        public List<TableroEntities> Tablero { get; set; } //no sabemos como manejarlo 
+        public List<int> ListaDni { get; set; } //
+        public int? DniGanador { get; set; } //al final 
+        public string? MotivoVictoria { get; set; } //al final
     }
 }

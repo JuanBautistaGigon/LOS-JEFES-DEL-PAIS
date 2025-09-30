@@ -8,7 +8,7 @@ namespace EstancieroResponse
 {
     public enum EstadoActualPartida
     {
-        EnJuego,
+        EnJuego = 1,
         Finalizada,
         Suspendida,
         Pausada,

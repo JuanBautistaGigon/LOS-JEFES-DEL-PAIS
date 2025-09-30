@@ -7,6 +7,7 @@ using EstancieroData;
 using EstancieroEntities;
 using EstancieroResponse;
 using EstancieroRequest;
+using System.Runtime.CompilerServices;
 
 
 namespace EstancieroService
@@ -29,7 +30,9 @@ namespace EstancieroService
                 TurnoEntities turno = new TurnoEntities { NumeroTurno = i + 1, DniJugador = nuevaPartidaEntities.ListaDni[i] }; 
                 nuevaPartidaEntities.ConfiguracionTurnos.Add(turno);
             }
-            nuevaPartidaEntities.Tablero = new List<TableroEntities>(); //duda
+            List<TableroEntities> tablero = Archivos.DeserealizarJson<TableroEntities>(Rutas.ObtenerRuta("tablero"));
+            nuevaPartidaEntities.Tablero = tablero;
+            
 
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
             return new Resultado<PartidaEntities> { Mensaje = "Partida creada exitosamente", Exito = true };
@@ -37,10 +40,17 @@ namespace EstancieroService
         }
         
 
-        public void CambiarEstadoPartida()
+        public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
-            // Lógica para cambiar el estado de una partida
-            // Parametros: IdPartida, NuevoEstado
+            List<PartidaEntities> partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+
+            if (partidas.Any(p => p.NumeroPartida == numeroPartida))
+            {
+                partidas.FirstOrDefault(p => p.NumeroPartida == numeroPartida).Estado = (int)estadoNuevo;
+                Archivos.ActualizarListaJson<PartidaEntities>(partidas, Rutas.ObtenerRuta("partida"));
+                return new Resultado<PartidaEntities> { Exito = true, Mensaje = "Estado modificado exitosamente" };
+            }
+            return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
         }
 
         public void AgregarJugadorPartida()

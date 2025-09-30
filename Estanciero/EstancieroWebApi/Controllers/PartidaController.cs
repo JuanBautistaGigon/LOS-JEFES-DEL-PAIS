@@ -20,6 +20,17 @@ namespace EstancieroWebApi.Controllers
             var resultado = partidaService.CrearPartida(partidaRequest);
             return Ok(resultado.Mensaje);
         }
+
+        [HttpPut("{numeroPartida}")]
+        public IActionResult CambiarEstado(int numeroPartida, [FromBody] EstadoActualPartida estadoNuevo)
+        {
+            var resulatado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
+            if (!resulatado.Exito)
+            {
+                return NotFound(resulatado.Mensaje);
+            }
+            return Ok(resulatado.Mensaje);
+        }
         
     }
 }

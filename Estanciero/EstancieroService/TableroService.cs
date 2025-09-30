@@ -48,7 +48,7 @@ namespace EstancieroService
                 if (casillero.PrecioCompra is not 0 && casillero.DniPropietarioActual is 0 && casillero.PrecioCompra < usuarioAmodificar.Monto)
                 {
                     casillero.DniPropietarioActual = dniJugador;
-                    usuarioAmodificar.Monto -= casillero.PrecioCompra;
+                    usuarioAmodificar.Monto -= casillero.PrecioCompra ?? 0; // Conversión explícita de int? a int
 
                     Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
                     Archivos.ActualizarListaJson(listaTablero, "tablero");
@@ -72,7 +72,7 @@ namespace EstancieroService
                 UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
                 if (casillero.PrecioAlquiler is not 0 && casillero.DniPropietarioActual is not 0 && casillero.PrecioAlquiler < usuarioAmodificar.Monto) // preguntar que pasa si el monto es menor al precio de alquiler
                 {
-                    usuarioAmodificar.Monto -= casillero.PrecioAlquiler;
+                    usuarioAmodificar.Monto -= casillero.PrecioAlquiler ?? 0;
 
                     Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
                 }

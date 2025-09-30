@@ -11,7 +11,7 @@ namespace EstancieroRequest
     {
         [MinLength (2)]
         [MaxLength (4)]
-        [Range(10000000,99999999)]
+        //[Range(10000000,99999999)]
         public List<int> Dnis {  get; set; }
     }
 }

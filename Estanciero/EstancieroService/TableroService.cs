@@ -10,7 +10,7 @@ namespace EstancieroService
 {
     public class TableroService
     {
-<<<<<<< HEAD
+//<<<<<<< HEAD
         //public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
         //                                                              // o debe llegar el numero del dado y sumarlo al actual
         //{
@@ -24,7 +24,7 @@ namespace EstancieroService
             
             
         //}
-=======
+//=======
 
         public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
                                                                        // o debe llegar el numero del dado y sumarlo al actual
@@ -38,7 +38,7 @@ namespace EstancieroService
 
             Archivos.ActualizarListaJson(listaUsuarios, "usuarios");  
         }
->>>>>>> origin/main
+//>>>>>>> origin/main
         public int LanzarDado(int casilleroActual)
         {
             int casilleroDestino = 0;

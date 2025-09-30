@@ -7,16 +7,16 @@ namespace EstancieroService
 {
     public class UsuarioService
     {
-        public Resultado CrearUsuario(UsuarioRequest usuario)
+        public Resultado<UsuarioEntities> CrearUsuario(UsuarioRequest usuario)
         {
             //Lógica para crear un nuevo usuario
             //Parametros: usuarioRequest, revisar si es necesario mandar un usuario entero o solo DNI
             var usuarioEntities = MapeoRequestAEntities(usuario);
             string ruta = Rutas.ObtenerRuta("usuarios");
             Archivos.SerializarJson(usuarioEntities, ruta);
-            return new Resultado { Exito = true, Mensaje = "Usuario creado con exito", Usuario = usuarioEntities };
+            return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito", Data = usuarioEntities };
         }
-        public Resultado ModificarDinero(int dni, int monto, TipoOperacion tipoOperacion)
+        public Resultado<UsuarioEntities> ModificarDinero(int dni, int monto, TipoOperacion tipoOperacion)
         {
             // Lógica para modificar el dinero de un usuario
             //Parametros: Dni, Cantidad, TipoOperacion
@@ -25,7 +25,7 @@ namespace EstancieroService
             var usuario = listaUsuarios.FirstOrDefault(u => u.Dni == dni);
             if (usuario == null)
             {
-                return new Resultado { Exito = false, Mensaje = "Usuario no encontrado" };
+                return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
             }
             else
             {
@@ -34,7 +34,7 @@ namespace EstancieroService
                     usuario.Monto += monto;
                     //Cambiar por actualizar
                     Archivos.ActualizarListaJson(listaUsuarios, Rutas.ObtenerRuta("usuarios"));
-                    return new Resultado { Exito = true, Mensaje = "Dinero agregado correctamente" };
+                    return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
                 }
                 else
                 {
@@ -43,16 +43,16 @@ namespace EstancieroService
                     Archivos.ActualizarListaJson(listaUsuarios, Rutas.ObtenerRuta("usuarios"));
                     if (tipoOperacion == TipoOperacion.Multa)
                     {
-                        return new Resultado { Exito = true, Mensaje = "Multa aplicada correctamente" };
+                        return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
                     }
                     else
                     {
-                        return new Resultado { Exito = true, Mensaje = "Compra realizada correctamente" };
+                        return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
                     }
                 }
             }
         }
-        public Resultado TransferirDinero(int dniEmisor, int dniReceptor, int monto)
+        public Resultado<UsuarioEntities> TransferirDinero(int dniEmisor, int dniReceptor, int monto)
         {
             // Lógica para transferir dinero entre usuarios
             //Parametros: DniEmisor, DniReceptor, Cantidad
@@ -62,14 +62,14 @@ namespace EstancieroService
             var usuarioReceptor = listaUsuarios.FirstOrDefault(u => u.Dni == dniReceptor);
             if (usuarioEmisor == null || usuarioReceptor == null)
             {
-                return new Resultado { Exito = false, Mensaje = "Uno o ambos usuarios no existen." };
+                return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
             }
             else
             {
                 usuarioEmisor.Monto -= monto;
                 usuarioReceptor.Monto += monto;
                 Archivos.ActualizarListaJson(listaUsuarios, Rutas.ObtenerRuta("usuarios"));
-                return new Resultado { Exito = true, Mensaje = "Transferencia realizada con exito." };
+                return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito" };
             }
         }
         public List<UsuarioEntities> ObtenerUsuarios()

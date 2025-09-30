@@ -9,11 +9,15 @@ namespace EstancieroWebApi.Controllers
     public class PartidaController : ControllerBase
     {
         PartidaService partidaService = new PartidaService();
-
-        //[HttpPost]
-        /*public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
+        /*
+        [HttpPost]
+        public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
         {
-
-        }*/
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        */
     }
 }

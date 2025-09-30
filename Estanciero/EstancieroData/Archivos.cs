@@ -38,5 +38,16 @@ namespace EstancieroData
             }
         }
 
+        public static void ActualizarListaJson<T>(List<T> lista, string ruta)
+        {
+            string directory = Path.GetDirectoryName(ruta);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            string json = JsonConvert.SerializeObject(lista, Formatting.Indented);
+            File.WriteAllText(ruta, json); 
+        }
+
     }
 }

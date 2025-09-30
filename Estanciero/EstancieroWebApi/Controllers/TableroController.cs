@@ -1,6 +1,23 @@
-﻿namespace EstancieroWebApi.Controllers
+﻿using EstancieroService;
+using EstancieroResponse;
+using EstancieroRequest;
+using Microsoft.AspNetCore.Mvc;
+namespace EstancieroWebApi.Controllers
 {
-    public class TableroController
+    [Route("tablero")]
+    [ApiController]
+    public class TableroController : ControllerBase
     {
+        private TableroService tableroService = new TableroService();
+
+
+        [HttpPut]
+        public IActionResult MoverJugador(int dni, int casillero)
+        {
+            tableroService.MoverJugador(dni, casillero);
+
+            return Ok("jugador movido con exito");
+
+        }
     }
 }

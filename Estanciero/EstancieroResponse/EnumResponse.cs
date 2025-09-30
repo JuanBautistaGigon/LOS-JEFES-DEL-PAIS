@@ -13,4 +13,10 @@ namespace EstancieroResponse
         Suspendida,
         Pausada,
     }
+    public enum TipoOperacion
+    {
+        Compra,
+        Multa,
+        Premio,
+    }
 }

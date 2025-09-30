@@ -13,9 +13,11 @@ namespace EstancieroService
 {
     public class PartidaService
     {
+        /*
         public PartidaResponse CrearPartida(PartidaRequest partidaRequest)
         {
-            string ruta = Rutas.ObtenerRutaCompletaUsuarios();
+
+            /*string ruta = Rutas.ObtenerRutaCompletaUsuarios();
             List<UsuarioEntities> listadnis = Archivos.DeserealizarJson<UsuarioEntities>(ruta);
 
             PartidaEntities partida = listadnis.FirstOrDefault(x=> x.Dni.Any);
@@ -23,7 +25,8 @@ namespace EstancieroService
 
 
             
-        }
+        };
+        */
 
         public void CambiarEstadoPartida()
         {

@@ -9,6 +9,15 @@ namespace EstancieroData
     public static class Rutas
     {
         public static string parteDeLaRuta = "../EstancieroData/DataBase";
+        
+        public static string ObtenerRuta(string nombreArchivo)
+        {
+            string rutaArchivo = Path.Combine(parteDeLaRuta, $"{nombreArchivo}.json"); //usuarios, tablero, partidas
+            string rutaCompleta = Path.GetFullPath(rutaArchivo);
+            return rutaCompleta;
+        }
+        
+        /*
         public static string ObtenerRutaCompletaUsuarios()
         {
             string rutaArchivo = Path.Combine(parteDeLaRuta, "usuarios.json");
@@ -27,5 +36,6 @@ namespace EstancieroData
             string rutaCompleta = Path.GetFullPath(rutaArchivo);
             return rutaCompleta;
         }
+        */
     }
 }

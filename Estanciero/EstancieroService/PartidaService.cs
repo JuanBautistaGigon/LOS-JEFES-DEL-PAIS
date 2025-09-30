@@ -14,7 +14,56 @@ namespace EstancieroService
 {
     public class PartidaService
     {
-        
+        public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+                                                                       // o debe llegar el numero del dado y sumarlo al actual
+        {
+            int casilleroNuevo = 0;
+            string rutaUsuario = Rutas.ObtenerRuta("usuarios");
+            string rutaTablero = Rutas.ObtenerRuta("tablero");
+            List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
+            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+            UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
+
+
+            casilleroNuevo = LanzarDado(usuarioAmodificar.CasilleroActual);
+
+            TableroEntities Casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroNuevo);
+
+            if (Casillero.TipoCasillero == "premio")
+            {
+                usuarioAmodificar.Monto += Casillero.Monto ?? 0;
+            }
+            else
+            {
+                if (Casillero.TipoCasillero == "multa")
+                {
+                    usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
+                }
+                else
+                {
+                    if (Casillero.DniPropietarioActual is not null)
+                    {
+                        UsuarioEntities propietario = listaUsuarios.FirstOrDefault(p=> p.Dni == Casillero.DniPropietarioActual);
+                        usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
+                        propietario.Monto += Casillero.Monto ?? 0;
+                    }
+                }
+            }
+            usuarioAmodificar.CasilleroActual = casilleroNuevo;
+
+            Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
+        }
+
+        public int LanzarDado(int casilleroActual)
+        {
+            int casilleroDestino = 0;
+
+            Random rand = new Random();
+
+            casilleroDestino = casilleroActual + rand.Next(1, 7);
+
+            return casilleroDestino;
+        }
         public Resultado<PartidaEntities> CrearPartida(PartidaRequest partidaRequest)
         {
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
@@ -38,7 +87,6 @@ namespace EstancieroService
             return new Resultado<PartidaEntities> { Mensaje = "Partida creada exitosamente", Exito = true };
  
         }
-        
 
         public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
@@ -53,11 +101,24 @@ namespace EstancieroService
             return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
         }
 
-        public void AgregarJugadorPartida()
+        public void FinalizarPartida(int numeroPartida)
+        {
+            List<PartidaEntities> partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+
+            if (partidas.Any(p => p.NumeroPartida == numeroPartida))
+            {
+                int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
+                partidas[indice].Estado = (int)EstadoActualPartida.Finalizada;
+                partidas[indice].FechaFin = DateTime.Now; 
+                partidas[indice].Duracion = partidas[indice].FechaFin - partidas[indice].FechaInicio;
+            }
+        }
+
+        /*public void AgregarJugadorPartida()
         {
             // Lógica para agregar un jugador a una partida
             // Parametros: IdPartida, DniJugador
-        }
+        }*/
 
         // Analizar si es necesario hacer metodos para iniciar y finalizar partida
 

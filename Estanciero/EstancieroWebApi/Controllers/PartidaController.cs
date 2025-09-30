@@ -24,6 +24,7 @@ namespace EstancieroWebApi.Controllers
         [HttpPut("{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromBody] EstadoActualPartida estadoNuevo)
         {
+            if (estadoNuevo == EstadoActualPartida.Finalizada) { }
             var resulatado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
             if (!resulatado.Exito)
             {

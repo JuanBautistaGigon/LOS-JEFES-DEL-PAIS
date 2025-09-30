@@ -19,5 +19,12 @@ namespace EstancieroWebApi.Controllers
             return Ok("jugador movido con exito");
 
         }
+
+        [HttpPut ("xd")]
+        public IActionResult ComprarPropiedad(int dni, int casillero)
+        {
+            tableroService.ComprarPropiedad(dni, casillero);
+            return Ok();
+        }
     }
 }

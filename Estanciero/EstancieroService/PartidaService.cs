@@ -14,7 +14,56 @@ namespace EstancieroService
 {
     public class PartidaService
     {
-        
+        public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+                                                                       // o debe llegar el numero del dado y sumarlo al actual
+        {
+            int casilleroNuevo = 0;
+            string rutaUsuario = Rutas.ObtenerRuta("usuarios");
+            string rutaTablero = Rutas.ObtenerRuta("tablero");
+            List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
+            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+            UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
+
+
+            casilleroNuevo = LanzarDado(usuarioAmodificar.CasilleroActual);
+
+            TableroEntities Casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroNuevo);
+
+            if (Casillero.TipoCasillero == "premio")
+            {
+                usuarioAmodificar.Monto += Casillero.Monto ?? 0;
+            }
+            else
+            {
+                if (Casillero.TipoCasillero == "multa")
+                {
+                    usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
+                }
+                else
+                {
+                    if (Casillero.DniPropietarioActual is not null)
+                    {
+                        UsuarioEntities propietario = listaUsuarios.FirstOrDefault(p=> p.Dni == Casillero.DniPropietarioActual);
+                        usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
+                        propietario.Monto += Casillero.Monto ?? 0;
+                    }
+                }
+            }
+            usuarioAmodificar.CasilleroActual = casilleroNuevo;
+
+            Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
+        }
+
+        public int LanzarDado(int casilleroActual)
+        {
+            int casilleroDestino = 0;
+
+            Random rand = new Random();
+
+            casilleroDestino = casilleroActual + rand.Next(1, 7);
+
+            return casilleroDestino;
+        }
         public Resultado<PartidaEntities> CrearPartida(PartidaRequest partidaRequest)
         {
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));

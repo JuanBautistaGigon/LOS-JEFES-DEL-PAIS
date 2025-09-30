@@ -9,7 +9,6 @@ namespace EstancieroRequest
         public int Dni { get; set; }
 
         [Required(ErrorMessage = "el nombre es obligatorio")]
-        [Range(2, 30, ErrorMessage = "el nombre no puede tener menos de 2 caraceteres ni mas de 30")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "el nombre es obligatorio")]

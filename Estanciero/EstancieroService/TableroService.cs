@@ -15,10 +15,20 @@ namespace EstancieroService
         {
             int casilleroNuevo = 0;
             string rutaUsuario = Rutas.ObtenerRuta("usuarios");
+            string rutaTablero = Rutas.ObtenerRuta("tablero");
             List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
+            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
             UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
+            
 
-            usuarioAmodificar.CasilleroActual = LanzarDado(usuarioAmodificar.CasilleroActual);
+            casilleroNuevo = LanzarDado(usuarioAmodificar.CasilleroActual);
+
+            TableroEntities Casillero = listaCasilleros.FirstOrDefault(x=> x.NumeroCasillero == casilleroNuevo);
+
+            if (Casillero.TipoCasillero == "premio")
+            {
+                usuarioAmodificar.Monto += Casillero.Monto;
+            }
 
             Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
         }
@@ -50,8 +60,8 @@ namespace EstancieroService
                     casillero.DniPropietarioActual = dniJugador;
                     usuarioAmodificar.Monto -= casillero.PrecioCompra;
 
-                    Archivos.ActualizarListaJson(listaUsuarios, "usuarios");
-                    Archivos.ActualizarListaJson(listaTablero, "tablero");
+                    Archivos.ActualizarListaJson(listaUsuarios, rutaUsuario);
+                    Archivos.ActualizarListaJson(listaTablero, rutaTablero);
                 }
             }
             // Lógica para que un jugador compre una propiedad

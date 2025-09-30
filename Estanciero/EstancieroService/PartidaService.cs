@@ -38,7 +38,6 @@ namespace EstancieroService
             return new Resultado<PartidaEntities> { Mensaje = "Partida creada exitosamente", Exito = true };
  
         }
-        
 
         public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
@@ -53,11 +52,24 @@ namespace EstancieroService
             return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
         }
 
-        public void AgregarJugadorPartida()
+        public void FinalizarPartida(int numeroPartida)
+        {
+            List<PartidaEntities> partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+
+            if (partidas.Any(p => p.NumeroPartida == numeroPartida))
+            {
+                int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
+                partidas[indice].Estado = (int)EstadoActualPartida.Finalizada;
+                partidas[indice].FechaFin = DateTime.Now; 
+                partidas[indice].Duracion = partidas[indice].FechaFin - partidas[indice].FechaInicio;
+            }
+        }
+
+        /*public void AgregarJugadorPartida()
         {
             // Lógica para agregar un jugador a una partida
             // Parametros: IdPartida, DniJugador
-        }
+        }*/
 
         // Analizar si es necesario hacer metodos para iniciar y finalizar partida
 

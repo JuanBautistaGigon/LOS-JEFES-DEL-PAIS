@@ -3,21 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EstancieroData;
+using EstancieroEntities;
 
 namespace EstancieroService
 {
     public class TableroService
     {
-        public void MoverJugador()
+        public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+                                                                      // o debe llegar el numero del dado y sumarlo al actual
         {
-            // Lógica para mover un jugador en el tablero
-            // Parametros: DniJugador, CasilleroDestino
+            int casilleroNuevo = 0;
+            string rutaUsuario = Rutas.ObtenerRutaCompletaTablero(); 
+            List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
+            UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x=> x.Dni == dniJugador);
+
+            usuarioAmodificar.CasilleroActual = LanzarDado(usuarioAmodificar.CasilleroActual);
+   
+            
+            
         }
-        public void LanzarDado()
+        public int LanzarDado(int casilleroActual)
         {
-            // Lógica para lanzar el dado y obtener un número aleatorio
-            // Parametros: DniJugador
-            // Retorna: CasilleroDestino, es decir, sumar posicion Actual + NumeroDado
+            int casilleroDestino = 0;
+
+
+            Random rand = new Random();
+
+            casilleroDestino = casilleroActual + rand.Next(1,7);
+
+            return casilleroDestino;
         }
         public void ComprarPropiedad()
         {

@@ -2,6 +2,7 @@
 using EstancieroResponse;
 using EstancieroService;
 using EstancieroRequest;
+using System.Runtime.InteropServices;
 namespace EstancieroWebApi.Controllers
 {
     [ApiController]

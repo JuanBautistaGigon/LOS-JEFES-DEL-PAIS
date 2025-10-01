@@ -44,7 +44,7 @@ namespace EstancieroService
             usuarioEntities.Dni = usuario.Dni;
             usuarioEntities.Nombre = usuario.Nombre;
             usuarioEntities.Email = usuario.Email;
-            usuarioEntities.Monto = 5000000;
+            usuarioEntities.Monto = 0;
             usuarioEntities.FechaRegistro = DateTime.Now;
             usuarioEntities.FechaEliminacion = null;
             usuarioEntities.EstadisticasJugador = new EstadisticasJugador();

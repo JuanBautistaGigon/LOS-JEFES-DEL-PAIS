@@ -69,6 +69,7 @@ namespace EstancieroService
             UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
 
 
+
             casilleroNuevo = LanzarDado(usuarioAmodificar.CasilleroActual);
 
             TableroEntities Casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroNuevo);

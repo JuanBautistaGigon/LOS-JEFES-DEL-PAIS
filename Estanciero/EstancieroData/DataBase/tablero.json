@@ -278,9 +278,7 @@
     "PrecioAlquiler": 15000,
     "Monto": 0,
     "DniPropietarioActual": 0
-  }
-]
-=======
+  },
     {
         "nroCasillero": 0,
         "tipo": "inicio",
@@ -541,4 +539,4 @@
 
 
 
->>>>>>> origin/main
+

@@ -19,4 +19,9 @@ namespace EstancieroResponse
         Multa,
         Premio,
     }
+    public enum EstadoJudaor
+    {
+        EnJuego,
+        Derrotado,
+    }
 }

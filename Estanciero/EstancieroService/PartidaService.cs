@@ -67,7 +67,7 @@ namespace EstancieroService
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
             return new Resultado<int> { Mensaje = "Partida creada exitosamente", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
  
-        }
+        }//
 
         public int LanzarDado(int dniJugador, int casilleroActual)
         {
@@ -83,7 +83,6 @@ namespace EstancieroService
 
             return numeroDado;
         }
-
 
         public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
         {
@@ -133,6 +132,7 @@ namespace EstancieroService
 
             return null;
         }
+
         public void ComprarPropiedad(int dniJugador, int casilleroActual)
         {
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
@@ -181,9 +181,9 @@ namespace EstancieroService
                 return new Resultado<PartidaEntities> { Exito = true, Mensaje = "Estado modificado exitosamente" };
             }
             return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
-        } //sumar en estado pausado
+        } //sumar en estado pausado //
 
-        public void FinalizarPartida(int numeroPartida, EstadoActualPartida estado)
+        public Resultado<int> FinalizarPartida(int numeroPartida)
         {
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
             PartidaEntities partidas = listaPartidas.FirstOrDefault(n => n.NumeroPartida == numeroPartida); 
@@ -216,8 +216,10 @@ namespace EstancieroService
                     }
                 }
                 Archivos.ActualizarListaJson<UsuarioEntities>(jugadores, Rutas.ObtenerRuta("usuarios"));
+                return ganador;
             }
-        } //devolver algo? 
+            return new Resultado<int> { Exito = false, Mensaje = "No se ha encontrado la partida", tipoStatusCode = TipoStatusCode.NotFound };
+        }  //
 
         private PartidaEntities MapeoREQaENT(PartidaRequest request)
         {

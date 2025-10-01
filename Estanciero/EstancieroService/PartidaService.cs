@@ -68,7 +68,11 @@ namespace EstancieroService
             return new Resultado<int> { Mensaje = "Partida creada exitosamente", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
  
         }
+<<<<<<< HEAD
+        
+=======
 
+>>>>>>> origin/main
         public int LanzarDado(int dniJugador, int casilleroActual)
         {
             int casilleroDestino = 0;
@@ -81,14 +85,23 @@ namespace EstancieroService
 
             return casilleroDestino;
         }
+<<<<<<< HEAD
+        public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+                                                                       // o debe llegar el numero del dado y sumarlo al actual
+=======
 
         public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
                                                                                          // o debe llegar el numero del dado y sumarlo al actual
+>>>>>>> origin/main
         {
             string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+<<<<<<< HEAD
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);            
+=======
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
+>>>>>>> origin/main
             DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
 
             if (detalleUsuarioAmodificar is not null)

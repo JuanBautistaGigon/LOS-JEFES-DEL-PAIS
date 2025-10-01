@@ -18,15 +18,15 @@ namespace EstancieroService
        
         public Resultado<int> CrearPartida(PartidaRequest partidaRequest)
         {
-            
-            List<UsuarioEntities> listaUsuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios")); 
             //Verificar que los usuarios esten registrados
+            List<UsuarioEntities> listaUsuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios")); 
             List<int> faltantes = partidaRequest.Dnis.Except(listaUsuariosRegistrados.Select(u => u.Dni)).ToList();
             if (faltantes.Any())                
             {
                 return new Resultado<int> { Exito = false, Mensaje = "Los siguientes DNIs no están registrados" + string.Join(",", faltantes), tipoStatusCode = TipoStatusCode.BadRequest }; 
-            }
-
+            } 
+            
+            //Comenzar datos de 
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
 
             PartidaEntities nuevaPartidaEntities = MapeoREQaENT(partidaRequest);

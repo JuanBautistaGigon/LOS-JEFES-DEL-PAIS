@@ -14,7 +14,7 @@ namespace EstancieroService
 {
     public class PartidaService
     {
-        public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+        public void MoverJugador(int dniJugador) // preguntar si puede llegar como parametro el casillero,
                                                                        // o debe llegar el numero del dado y sumarlo al actual
         {
             int casilleroNuevo = 0;

@@ -40,5 +40,22 @@ namespace EstancieroWebApi.Controllers
                 return BadRequest("No se pudo crear el usuario");
             }
         }
+        [HttpPut()]
+        public IActionResult ModificarUsuario([FromBody] UsuarioRequest usuarioRequest)
+        {
+            var resultado = usuarioService.ModificarUsuario(usuarioRequest);
+            if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.Ok)
+            {
+                return Ok(resultado.Mensaje);
+            }
+            else if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.NotFound)
+            {
+                return NotFound(resultado.Mensaje);
+            }
+            else
+            {
+                return BadRequest("No se pudo modificar el usuario");
+            }
+        }
     }
 }

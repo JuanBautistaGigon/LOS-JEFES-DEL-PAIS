@@ -16,6 +16,22 @@ namespace EstancieroService
             Archivos.SerializarJson(usuarioEntities, ruta);
             return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito", Data = usuarioEntities, tipoStatusCode = TipoStatusCode.Ok };
         }
+        public Resultado<UsuarioEntities> ModificarUsuario(UsuarioRequest usuario)
+        {
+            var listaUsuarios = ObtenerUsuarios();
+            var usuarioModificar = listaUsuarios.FirstOrDefault(x => x.Dni == usuario.Dni);
+            if (usuarioModificar != null)
+            {
+                usuarioModificar.Nombre = usuario.Nombre;
+                usuarioModificar.Email = usuario.Email;
+                Archivos.ActualizarListaJson<UsuarioEntities>(listaUsuarios, Rutas.ObtenerRuta("usuarios"));
+                return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario modificado con exito", Data = usuarioModificar, tipoStatusCode = TipoStatusCode.Ok };
+            }
+            else
+            {
+                return new Resultado<UsuarioEntities> { Exito = false, Mensaje = "No se encontro un usuario con ese DNI", Data = null, tipoStatusCode = TipoStatusCode.NotFound };
+            }
+        }
         public List<UsuarioEntities> ObtenerUsuarios()
         {
             string ruta = Rutas.ObtenerRuta("usuarios");

@@ -20,7 +20,7 @@ namespace EstancieroWebApi.Controllers
 
         }
 
-        [HttpPut ("xd")]
+        [HttpPut("xd")]
         public IActionResult ComprarPropiedad(int dni, int casillero)
         {
             tableroService.ComprarPropiedad(dni, casillero);

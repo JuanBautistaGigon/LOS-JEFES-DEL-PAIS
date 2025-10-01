@@ -146,14 +146,14 @@ namespace EstancieroService
 
         public void FinalizarPartida(int numeroPartida)
         {
-            List<PartidaEntities> partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            PartidaEntities partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida")).FirstOrDefault(n => n.NumeroPartida == numeroPartida);
 
-            if (partidas.Any(p => p.NumeroPartida == numeroPartida))
+            if (partidas != null)
             {
-                int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
-                partidas[indice].Estado = (int)EstadoActualPartida.Finalizada;
-                partidas[indice].FechaFin = DateTime.Now; 
-                partidas[indice].Duracion = partidas[indice].FechaFin - partidas[indice].FechaInicio;
+                //int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
+                partidas.Estado = (int)EstadoActualPartida.Finalizada;
+                partidas.FechaFin = DateTime.Now; 
+                partidas.Duracion = partidas.FechaFin - partidas.FechaInicio;
             }
         }
 

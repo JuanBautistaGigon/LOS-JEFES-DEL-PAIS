@@ -19,18 +19,23 @@ namespace EstancieroService
         public Resultado<int> CrearPartida(PartidaRequest partidaRequest)
         {
             //Verificar que los usuarios esten registrados
-            List<UsuarioEntities> listaUsuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios")); 
+            List<int> DnisJugadores = partidaRequest.Dnis;
+            Resultado<int> resultado = VerificarUsuarios(DnisJugadores);
+            if (!resultado.Exito)
+            {
+                return resultado; 
+            }
+            /*List<UsuarioEntities> listaUsuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios")); 
             List<int> faltantes = partidaRequest.Dnis.Except(listaUsuariosRegistrados.Select(u => u.Dni)).ToList();
             if (faltantes.Any())                
             {
                 return new Resultado<int> { Exito = false, Mensaje = "Los siguientes DNIs no están registrados" + string.Join(",", faltantes), tipoStatusCode = TipoStatusCode.BadRequest }; 
             } 
-            
-            //Comenzar datos de 
-            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            */
 
+            //Comenzar datos partida 
+            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
             PartidaEntities nuevaPartidaEntities = MapeoREQaENT(partidaRequest);
-            //Comenzar datos de partida
             nuevaPartidaEntities.NumeroPartida = listaPartidas.Count + 1;
             nuevaPartidaEntities.FechaInicio = DateTime.Now;
             nuevaPartidaEntities.Estado = 1;
@@ -43,13 +48,31 @@ namespace EstancieroService
             }
             List<TableroEntities> tablero = Archivos.DeserealizarJson<TableroEntities>(Rutas.ObtenerRuta("tablero"));
             nuevaPartidaEntities.Tablero = tablero;
-            
+
+            //Comenzar datos de detalleUsuario
+            foreach (int i in partidaRequest.Dnis) {
+                DetalleUsuarioEntities detalleUsuarios = new DetalleUsuarioEntities
+                {
+                    ListaJugadoresPartida = partidaRequest.Dnis,
+                    NumeroPartida = nuevaPartidaEntities.NumeroPartida,
+                    DniUsuario = partidaRequest.Dnis[i], 
+                    PosicionActual = 0, 
+                    DineroActual = 5000000, 
+                    ListaMovimientos = new MovimientosEntities(), 
+                    Estado = 1, 
+                };
+                Archivos.SerializarJson<DetalleUsuarioEntities>(detalleUsuarios, Rutas.ObtenerRuta("detalleUsuario")); 
+            }
 
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
             return new Resultado<int> { Mensaje = "Partida creada exitosamente", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
  
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/main
         public int LanzarDado(int dniJugador, int casilleroActual)
         {
             int casilleroDestino = 0;
@@ -62,13 +85,23 @@ namespace EstancieroService
 
             return casilleroDestino;
         }
+<<<<<<< HEAD
         public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
                                                                        // o debe llegar el numero del dado y sumarlo al actual
+=======
+
+        public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+                                                                                         // o debe llegar el numero del dado y sumarlo al actual
+>>>>>>> origin/main
         {
             string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+<<<<<<< HEAD
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);            
+=======
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
+>>>>>>> origin/main
             DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
 
             if (detalleUsuarioAmodificar is not null)
@@ -143,6 +176,21 @@ namespace EstancieroService
             {
                 ListaDni = request.Dnis
             };
+        }
+
+        private Resultado<int> VerificarUsuarios(List<int> dnisUsuarios)
+        {
+            List<int> usuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios"))
+                .Where(f => f.FechaEliminacion == null)
+                .Select(u => u.Dni)
+                .ToList();
+
+            List<int> usuariosNoRegistrados = dnisUsuarios.Except(usuariosRegistrados).ToList(); 
+            if (usuariosNoRegistrados.Count() > 0)
+            {
+                return new Resultado<int> { Exito = false, Mensaje = "Los siguientes DNIs no están registrados:" + string.Join(",", usuariosNoRegistrados), tipoStatusCode = TipoStatusCode.BadRequest };  
+            }
+            return new Resultado<int> { Exito = true };
         }
     }
 }

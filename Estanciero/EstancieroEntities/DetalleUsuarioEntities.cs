@@ -14,6 +14,6 @@ namespace EstancieroEntities
         public int PosicionActual { get; set; }
         public int DineroActual { get; set; }
         public MovimientosEntities ListaMovimientos { get; set; }
-        public int Estado { get; set; } // En juego o Derrotado
+        public int Estado { get; set; } // En juego = 1 o Derrotado = 2
     }
 }

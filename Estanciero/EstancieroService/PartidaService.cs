@@ -50,7 +50,7 @@ namespace EstancieroService
  
         }
         
-        public int LanzarDado(int casilleroActual)
+        public int LanzarDado(int dniJugador, int casilleroActual)
         {
             int casilleroDestino = 0;
 
@@ -58,47 +58,57 @@ namespace EstancieroService
 
             casilleroDestino = casilleroActual + rand.Next(1, 7);
 
+            MoverJugador(dniJugador, casilleroDestino);
+
             return casilleroDestino;
         }
-        public void MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+        public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
                                                                        // o debe llegar el numero del dado y sumarlo al actual
         {
-            int casilleroNuevo = 0;
-            string rutaUsuario = Rutas.ObtenerRuta("usuarios");
             string rutaTablero = Rutas.ObtenerRuta("tablero");
-            List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
+            string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
-            UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);            
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
 
-
-
-            casilleroNuevo = LanzarDado(usuarioAmodificar.CasilleroActual);
-
-            TableroEntities Casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroNuevo);
-
-            if (Casillero.TipoCasillero == "premio")
+            if (detalleUsuarioAmodificar is not null)
             {
-                usuarioAmodificar.Monto += Casillero.Monto ?? 0;
-            }
-            else
-            {
-                if (Casillero.TipoCasillero == "multa")
+                detalleUsuarioAmodificar.PosicionActual = casilleroDestino;
+
+                TableroEntities Casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroDestino);
+                MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
+
+                if (Casillero.TipoCasillero == "premio")
                 {
-                    usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
+                    detalleUsuarioAmodificar.DineroActual += Casillero.Monto ?? 0;
+                    movimientos.Premios += 1;
                 }
                 else
                 {
-                    if (Casillero.DniPropietarioActual is not null)
+                    if (Casillero.TipoCasillero == "multa")
                     {
-                        UsuarioEntities propietario = listaUsuarios.FirstOrDefault(p => p.Dni == Casillero.DniPropietarioActual);
-                        usuarioAmodificar.Monto -= Casillero.Monto ?? 0;
-                        propietario.Monto += Casillero.Monto ?? 0;
+                        detalleUsuarioAmodificar.DineroActual -= Casillero.Monto ?? 0;
+                        movimientos.PagoMultas += 1;
+                    }
+                    else
+                    {
+                        if (Casillero.DniPropietarioActual is not null)
+                        {
+                            DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == Casillero.DniPropietarioActual);
+                            detalleUsuarioAmodificar.DineroActual -= Casillero.Monto ?? 0;
+                            detallePropietario.DineroActual += Casillero.Monto ?? 0;
+                            movimientos.PagosAlquiler += 1;
+                        }
                     }
                 }
-            }
-            usuarioAmodificar.CasilleroActual = casilleroNuevo;
 
-            Archivos.ActualizarListaJson(listaUsuarios, rutaUsuario);
+                Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
+                Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
+
+                return detalleUsuarioAmodificar;
+            }
+
+            return null;
         }
 
         public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)

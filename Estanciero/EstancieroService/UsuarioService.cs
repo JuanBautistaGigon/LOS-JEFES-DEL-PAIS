@@ -7,15 +7,17 @@ namespace EstancieroService
 {
     public class UsuarioService
     {
+        //Lógica para crear un nuevo usuario
+        //Parámetros: usuarioRequest
         public Resultado<UsuarioEntities> CrearUsuario(UsuarioRequest usuario)
         {
-            //Lógica para crear un nuevo usuario
-            //Parametros: usuarioRequest, revisar si es necesario mandar un usuario entero o solo DNI
             var usuarioEntities = MapeoRequestAEntities(usuario);
             string ruta = Rutas.ObtenerRuta("usuarios");
             Archivos.SerializarJson(usuarioEntities, ruta);
             return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito", Data = usuarioEntities, tipoStatusCode = TipoStatusCode.Ok };
         }
+        //Lógica para modificar los datos de un usuario
+        //Parámetros: usuarioRequest
         public Resultado<UsuarioEntities> ModificarUsuario(UsuarioRequest usuario)
         {
             var listaUsuarios = ObtenerUsuarios();
@@ -32,6 +34,24 @@ namespace EstancieroService
                 return new Resultado<UsuarioEntities> { Exito = false, Mensaje = "No se encontro un usuario con ese DNI", Data = null, tipoStatusCode = TipoStatusCode.NotFound };
             }
         }
+        //Lógica para eliminar un usuario
+        //Parámetros: dni
+        public Resultado<UsuarioEntities> EliminarUsuario(int dni)
+        {
+            var listaUsuarios = ObtenerUsuarios();
+            var usuarioEliminar = listaUsuarios.FirstOrDefault(x => x.Dni == dni);
+            if (usuarioEliminar != null)
+            {
+                usuarioEliminar.FechaEliminacion = DateTime.Now;
+                Archivos.ActualizarListaJson<UsuarioEntities>(listaUsuarios, Rutas.ObtenerRuta("usuarios"));
+                return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario eliminado con exito", Data = usuarioEliminar, tipoStatusCode = TipoStatusCode.Ok };
+            }
+            else
+            {
+                return new Resultado<UsuarioEntities> { Exito = false, Mensaje = "No se encontro un usuario con ese DNI", Data = null, tipoStatusCode = TipoStatusCode.NotFound };
+            }
+        }
+        //Lógica para obtener la lista de usuarios
         public List<UsuarioEntities> ObtenerUsuarios()
         {
             string ruta = Rutas.ObtenerRuta("usuarios");
@@ -44,7 +64,6 @@ namespace EstancieroService
             usuarioEntities.Dni = usuario.Dni;
             usuarioEntities.Nombre = usuario.Nombre;
             usuarioEntities.Email = usuario.Email;
-            usuarioEntities.Monto = 0;
             usuarioEntities.FechaRegistro = DateTime.Now;
             usuarioEntities.FechaEliminacion = null;
             usuarioEntities.EstadisticasJugador = new EstadisticasJugador();

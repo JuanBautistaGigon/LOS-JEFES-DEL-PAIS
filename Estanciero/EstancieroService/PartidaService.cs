@@ -68,40 +68,31 @@ namespace EstancieroService
             return new Resultado<int> { Mensaje = "Partida creada exitosamente", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
  
         }
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> origin/main
         public int LanzarDado(int dniJugador, int casilleroActual)
         {
             int casilleroDestino = 0;
 
             Random rand = new Random();
 
-            casilleroDestino = casilleroActual + rand.Next(1, 7);
+            int numeroDado = rand.Next(1, 7);
+
+            casilleroDestino = casilleroActual + numeroDado;
 
             MoverJugador(dniJugador, casilleroDestino);
 
-            return casilleroDestino;
+            return numeroDado;
         }
-<<<<<<< HEAD
-        public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
-                                                                       // o debe llegar el numero del dado y sumarlo al actual
-=======
+
 
         public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
-                                                                                         // o debe llegar el numero del dado y sumarlo al actual
->>>>>>> origin/main
         {
             string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
-<<<<<<< HEAD
-            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);            
-=======
+
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
->>>>>>> origin/main
+
             DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
 
             if (detalleUsuarioAmodificar is not null)
@@ -134,7 +125,6 @@ namespace EstancieroService
                         }
                     }
                 }
-
                 Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
                 Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
 
@@ -143,6 +133,42 @@ namespace EstancieroService
 
             return null;
         }
+        public void ComprarPropiedad(int dniJugador, int casilleroActual)
+        {
+            string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
+            string rutaTablero = Rutas.ObtenerRuta("tablero");
+            string rutaPartida = Rutas.ObtenerRuta("partida");
+
+            List<DetalleUsuarioEntities> listaDetalleUsuariosAmodificar = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
+            List<TableroEntities> listaTablero = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+
+            TableroEntities casillero = listaTablero.FirstOrDefault(x => x.NumeroCasillero == casilleroActual);
+            if (casillero != null)
+            {
+                DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuariosAmodificar.FirstOrDefault(x => x.DniUsuario == dniJugador);
+                if (casillero.PrecioCompra is not 0 && casillero.DniPropietarioActual is 0 && casillero.PrecioCompra < detalleUsuarioAmodificar.DineroActual)
+                {
+                    MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
+
+                    casillero.DniPropietarioActual = dniJugador;
+                    detalleUsuarioAmodificar.DineroActual -= casillero.PrecioCompra ?? 0; // Conversión explícita de int? a int
+                    movimientos.CompraProvincias += 1;
+
+                    if (movimientos.CompraProvincias >= 12)
+                    {
+                        PartidaEntities partida = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
+                        //BuscarGanador(partida);
+                        ;
+                    }
+
+
+                    Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario);
+                    Archivos.ActualizarListaJson(listaTablero, rutaTablero);
+                }
+            }
+            // Lógica para que un jugador compre una propiedad
+            // Parametros: DniJugador, Casillero    
+        }
 
         public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
@@ -155,20 +181,43 @@ namespace EstancieroService
                 return new Resultado<PartidaEntities> { Exito = true, Mensaje = "Estado modificado exitosamente" };
             }
             return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
-        }
+        } //sumar en estado pausado
 
-        public void FinalizarPartida(int numeroPartida)
+        public void FinalizarPartida(int numeroPartida, EstadoActualPartida estado)
         {
-            PartidaEntities partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida")).FirstOrDefault(n => n.NumeroPartida == numeroPartida);
-
+            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            PartidaEntities partidas = listaPartidas.FirstOrDefault(n => n.NumeroPartida == numeroPartida); 
             if (partidas != null)
             {
-                //int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
+                //Actualizar datos partida
                 partidas.Estado = (int)EstadoActualPartida.Finalizada;
                 partidas.FechaFin = DateTime.Now; 
                 partidas.Duracion = partidas.FechaFin - partidas.FechaInicio;
+                //Buscar ganador
+                Resultado<int> ganador = BuscarGanador(partidas);
+                partidas.DniGanador = ganador.Data;
+                partidas.MotivoVictoria = ganador.Mensaje;
+                Archivos.ActualizarListaJson<PartidaEntities>(listaPartidas, Rutas.ObtenerRuta("partida"));
+
+                //Actualizar estadisticas usuarios 
+                List<UsuarioEntities> jugadores = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios"));
+                List<UsuarioEntities> jugadoresPartida = jugadores.Where(u => partidas.ListaDni.Contains(u.Dni)).ToList();
+                foreach (UsuarioEntities j in  jugadoresPartida)
+                {
+                    j.EstadisticasJugador.PartidasJugadas += 1;
+                    
+                    if (j.Dni == ganador.Data)
+                    {
+                        j.EstadisticasJugador.PartidasGanadas += 1;
+                    }
+                    else
+                    {
+                        j.EstadisticasJugador.PartidasPerdidas += 1;
+                    }
+                }
+                Archivos.ActualizarListaJson<UsuarioEntities>(jugadores, Rutas.ObtenerRuta("usuarios"));
             }
-        }
+        } //devolver algo? 
 
         private PartidaEntities MapeoREQaENT(PartidaRequest request)
         {
@@ -191,6 +240,33 @@ namespace EstancieroService
                 return new Resultado<int> { Exito = false, Mensaje = "Los siguientes DNIs no están registrados:" + string.Join(",", usuariosNoRegistrados), tipoStatusCode = TipoStatusCode.BadRequest };  
             }
             return new Resultado<int> { Exito = true };
+        }
+
+        private Resultado<int> BuscarGanador(PartidaEntities partidaTerminada)
+        {
+            List<DetalleUsuarioEntities> jugadores = Archivos.DeserealizarJson<DetalleUsuarioEntities>(Rutas.ObtenerRuta("detalleUsuario")).Where(p => p.NumeroPartida == partidaTerminada.NumeroPartida).ToList();
+            int dniUsuarioGanador = 0;
+            //Verificar condicion unico saldo positivo
+            if (jugadores.Where(s => s.DineroActual > 0).Count() == 1)
+            {
+                dniUsuarioGanador = jugadores.FirstOrDefault(s => s.DineroActual > 0).DniUsuario;
+                return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por ser el único con saldo positivo", Data = dniUsuarioGanador };
+            }
+            int saldoMayor = 0; 
+            foreach (DetalleUsuarioEntities i in jugadores)
+            {
+                if (i.ListaMovimientos.CompraProvincias >= 12)
+                {
+                    dniUsuarioGanador = i.DniUsuario;
+                    return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer 12 o más partidas compradas", Data = dniUsuarioGanador }; 
+                } 
+                if (i.DineroActual >  saldoMayor)
+                {
+                    saldoMayor = i.DineroActual;
+                    dniUsuarioGanador = i.DniUsuario;
+                }
+            }
+            return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Data = dniUsuarioGanador };
         }
     }
 }

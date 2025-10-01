@@ -20,6 +20,7 @@ namespace EstancieroService
         {
             
             List<UsuarioEntities> listaUsuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios")); 
+            //Verificar que los usuarios esten registrados
             List<int> faltantes = partidaRequest.Dnis.Except(listaUsuariosRegistrados.Select(u => u.Dni)).ToList();
             if (faltantes.Any())                
             {
@@ -29,6 +30,7 @@ namespace EstancieroService
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
 
             PartidaEntities nuevaPartidaEntities = MapeoREQaENT(partidaRequest);
+            //Comenzar datos de partida
             nuevaPartidaEntities.NumeroPartida = listaPartidas.Count + 1;
             nuevaPartidaEntities.FechaInicio = DateTime.Now;
             nuevaPartidaEntities.Estado = 1;

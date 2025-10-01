@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EstancieroEntities
 {
-    public class DetallePartidaEntities
+    public class DetalleUsuarioEntities
     {
-        public List<int> ListaJugadoresPartida { get; set; }
+        public List<int> ListaJugadoresPartida { get; set; } //sacarlo? 
         public int NumeroPartida { get; set; }
         public int DniUsuario { get; set; }
         public int PosicionActual { get; set; }

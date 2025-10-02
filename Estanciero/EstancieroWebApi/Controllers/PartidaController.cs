@@ -2,6 +2,7 @@
 using EstancieroResponse;
 using EstancieroService;
 using EstancieroRequest;
+using EstancieroEntities;
 namespace EstancieroWebApi.Controllers
 {
     [ApiController]
@@ -17,23 +18,29 @@ namespace EstancieroWebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var resultado = partidaService.CrearPartida(partidaRequest);
+            Resultado<int> resultado = partidaService.CrearPartida(partidaRequest);
             return Ok(resultado.Mensaje);
         }
 
         [HttpPut("{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromBody] EstadoActualPartida estadoNuevo)
         {
+            Resultado<int> resultado = new Resultado<int>();
             if (estadoNuevo == EstadoActualPartida.Finalizada || estadoNuevo == EstadoActualPartida.Suspendida)
             {
-                var resultado = partidaService.FinalizarPartida(numeroPartida);
+                resultado = partidaService.FinalizarPartida(numeroPartida);
+                if (!resultado.Exito)
+                {
+                    return NotFound(resultado.Mensaje);
+                }
+                return Ok(resultado.Mensaje);
             }
-            var resulatado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
-            if (!resulatado.Exito)
+             resultado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
+            if (!resultado.Exito)
             {
-                return NotFound(resulatado.Mensaje);
+                return NotFound(resultado.Mensaje);
             }
-            return Ok(resulatado.Mensaje);
+            return Ok(resultado.Mensaje);
         }
 
 
@@ -41,9 +48,9 @@ namespace EstancieroWebApi.Controllers
         public IActionResult LanzarDado(int dniJugador, int casilleroActual)
 
         {
-          int dado = partidaService.LanzarDado(dniJugador, casilleroActual);
+            MovimientoResponse dado = partidaService.LanzarDado(dniJugador, casilleroActual);
 
-            if (dado is not 0)
+            if (dado is not null)
             {
                 return Ok($"el numero de dado que salio es {dado}");
             }

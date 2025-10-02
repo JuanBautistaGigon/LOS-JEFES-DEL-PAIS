@@ -24,4 +24,10 @@ namespace EstancieroResponse
         EnJuego,
         Derrotado,
     }
+    public enum TipoStatusCode
+    {
+        Ok,
+        BadRequest,
+        NotFound,
+    }
 }

@@ -69,8 +69,9 @@ namespace EstancieroService
  
         }//
 
-        public int LanzarDado(int dniJugador, int casilleroActual)
+        public MovimientoResponse LanzarDado(int dniJugador, int casilleroActual)
         {
+
             int casilleroDestino = 0;
 
             Random rand = new Random();
@@ -79,20 +80,27 @@ namespace EstancieroService
 
             casilleroDestino = casilleroActual + numeroDado;
 
-            MoverJugador(dniJugador, casilleroDestino);
+           MovimientoResponse movimiento =  MoverJugador(dniJugador, casilleroDestino);
+            movimiento.NumeroDado = numeroDado;
+            movimiento.CasilleroDestino = casilleroDestino;
 
-            return numeroDado;
+            return movimiento;
         }
 
-        public DetalleUsuarioEntities MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+        public MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
         {
+            MovimientoResponse movimientoResponse = new MovimientoResponse();
+            
             string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
+            string rutaPartida = Rutas.ObtenerRuta("partida");
+            
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
 
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
 
             DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
+            PartidaEntities partidaActual = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x=> x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
 
             if (detalleUsuarioAmodificar is not null)
             {
@@ -105,6 +113,9 @@ namespace EstancieroService
                 {
                     detalleUsuarioAmodificar.DineroActual += Casillero.Monto ?? 0;
                     movimientos.Premios += 1;
+                    movimientoResponse.CantidadPremios = movimientos.Premios;
+                    movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {Casillero.Monto}";
+
                 }
                 else
                 {
@@ -112,25 +123,48 @@ namespace EstancieroService
                     {
                         detalleUsuarioAmodificar.DineroActual -= Casillero.Monto ?? 0;
                         movimientos.PagoMultas += 1;
+                        movimientoResponse.CantidadMultas = movimientos.PagoMultas;
+                        movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {Casillero.Monto}";
                     }
                     else
                     {
                         if (Casillero.DniPropietarioActual is not null)
                         {
+
                             DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == Casillero.DniPropietarioActual);
+
+                            
                             detalleUsuarioAmodificar.DineroActual -= Casillero.Monto ?? 0;
+
                             detallePropietario.DineroActual += Casillero.Monto ?? 0;
                             movimientos.PagosAlquiler += 1;
+                            movimientoResponse.CantidadAlquileres = movimientos.PagosAlquiler;
+                            movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {Casillero.Monto}";
+
+
                         }
                     }
                 }
                 Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
                 Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
 
-                return detalleUsuarioAmodificar;
-            }
+                if (detalleUsuarioAmodificar.DineroActual < 0)
+                {
+                    Resultado<int> result = BuscarGanador(partidaActual);
+                    if (result.Exito)
+                    {
+                        FinalizarPartida(partidaActual.NumeroPartida);
+                    } else
+                    {
+                        detalleUsuarioAmodificar.Estado = 2;
+                    }
+                }
 
-            return null;
+                
+                return movimientoResponse;
+            }
+            movimientoResponse.Descripcion = "Caiste en un casillero de provincia sin propietario";
+            return movimientoResponse;
         }
 
         public void ComprarPropiedad(int dniJugador, int casilleroActual)
@@ -156,9 +190,8 @@ namespace EstancieroService
 
                     if (movimientos.CompraProvincias >= 12)
                     {
-                        PartidaEntities partida = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
-                        //BuscarGanador(partida);
-                        ;
+                        FinalizarPartida(detalleUsuarioAmodificar.NumeroPartida);
+                        
                     }
 
 
@@ -170,7 +203,7 @@ namespace EstancieroService
             // Parametros: DniJugador, Casillero    
         }
 
-        public Resultado<PartidaEntities> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
+        public Resultado<int> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
             List<PartidaEntities> partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
 
@@ -178,9 +211,9 @@ namespace EstancieroService
             {
                 partidas.FirstOrDefault(p => p.NumeroPartida == numeroPartida).Estado = (int)estadoNuevo;
                 Archivos.ActualizarListaJson<PartidaEntities>(partidas, Rutas.ObtenerRuta("partida"));
-                return new Resultado<PartidaEntities> { Exito = true, Mensaje = "Estado modificado exitosamente" };
+                return new Resultado<int> { Exito = true, Mensaje = "Estado modificado exitosamente" };
             }
-            return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
+            return new Resultado<int> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
         } //sumar en estado pausado //
 
         public Resultado<int> FinalizarPartida(int numeroPartida)

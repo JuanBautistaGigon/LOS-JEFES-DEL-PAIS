@@ -10,31 +10,7 @@ namespace EstancieroService
 {
     public class TableroService
     {
-        
-        public void ComprarPropiedad(int dniJugador, int casilleroActual)
-        {
-            string rutaUsuario = Rutas.ObtenerRuta("usuarios");
-            string rutaTablero = Rutas.ObtenerRuta("tablero");
-
-            List<UsuarioEntities> listaUsuarios = Archivos.DeserealizarJson<UsuarioEntities>(rutaUsuario);
-            List<TableroEntities> listaTablero = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
-
-            TableroEntities casillero = listaTablero.FirstOrDefault(x => x.NumeroCasillero == casilleroActual);
-            if (casillero != null)
-            {
-                UsuarioEntities usuarioAmodificar = listaUsuarios.FirstOrDefault(x => x.Dni == dniJugador);
-                if (casillero.PrecioCompra is not 0 && casillero.DniPropietarioActual is 0 && casillero.PrecioCompra < usuarioAmodificar.Monto)
-                {
-                    casillero.DniPropietarioActual = dniJugador;
-                    usuarioAmodificar.Monto -= casillero.PrecioCompra ?? 0; // Conversión explícita de int? a int
-
-                    Archivos.ActualizarListaJson(listaUsuarios, rutaUsuario);
-                    Archivos.ActualizarListaJson(listaTablero, rutaTablero);
-                }
-            }
-            // Lógica para que un jugador compre una propiedad
-            // Parametros: DniJugador, Casillero    
-        }
+       
         
     }
 }

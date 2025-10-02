@@ -32,6 +32,27 @@ namespace EstancieroWebApi.Controllers
             }
             return Ok(resulatado.Mensaje);
         }
-        
+
+
+        [HttpPut("{dniJugador}")]
+        public IActionResult LanzarDado(int dniJugador, int casilleroActual)
+
+        {
+          int dado = partidaService.LanzarDado(dniJugador, casilleroActual);
+
+            if (dado is not 0)
+            {
+                return Ok($"el numero de dado que salio es {dado}");
+            }
+            return BadRequest("ocurrio un error");
+        }
+
+        [HttpPut ("{dniPropietarioNuevo}")]
+        public IActionResult ComprarPropiedad(int dniPropietarioNuevo, int casilleroActual)
+        {
+            partidaService.ComprarPropiedad(dniPropietarioNuevo, casilleroActual);
+
+            return Ok("propiedad comprada con exito");
+        }
     }
 }

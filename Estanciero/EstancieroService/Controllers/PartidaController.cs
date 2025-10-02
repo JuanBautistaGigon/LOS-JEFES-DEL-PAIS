@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using EstancieroResponse;
 using EstancieroService;
 using EstancieroRequest;
@@ -18,3 +18,4 @@ namespace EstancieroWebApi.Controllers
         }
     }
 }
+*/

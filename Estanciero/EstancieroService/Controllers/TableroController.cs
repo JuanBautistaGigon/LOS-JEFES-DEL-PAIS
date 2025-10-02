@@ -1,6 +1,7 @@
-﻿namespace EstancieroWebApi.Controllers
+﻿/*namespace EstancieroWebApi.Controllers
 {
     public class TableroController
     {
     }
 }
+*/

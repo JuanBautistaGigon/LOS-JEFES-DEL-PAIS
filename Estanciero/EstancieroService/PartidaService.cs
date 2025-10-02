@@ -67,7 +67,7 @@ namespace EstancieroService
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
             return new Resultado<int> { Mensaje = "Partida creada exitosamente", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
  
-        }
+        }//
 
         public int LanzarDado(int dniJugador, int casilleroActual)
         {
@@ -90,7 +90,7 @@ namespace EstancieroService
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
 
-            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);            
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
 
             DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
 
@@ -124,8 +124,6 @@ namespace EstancieroService
                         }
                     }
                 }
-
-
                 Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
                 Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
 
@@ -158,9 +156,10 @@ namespace EstancieroService
 
                     if (movimientos.CompraProvincias >= 12)
                     {
-                        PartidaEntities partida = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x=> x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida;
+                        PartidaEntities partida = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
                         //BuscarGanador(partida);
-;                    }
+                        ;
+                    }
 
 
                     Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario);
@@ -182,20 +181,45 @@ namespace EstancieroService
                 return new Resultado<PartidaEntities> { Exito = true, Mensaje = "Estado modificado exitosamente" };
             }
             return new Resultado<PartidaEntities> { Exito = false, Mensaje = "No se econtro una partida con ese número" };
-        }
+        } //sumar en estado pausado //
 
-        public void FinalizarPartida(int numeroPartida)
+        public Resultado<int> FinalizarPartida(int numeroPartida)
         {
-            PartidaEntities partidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida")).FirstOrDefault(n => n.NumeroPartida == numeroPartida);
-
+            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            PartidaEntities partidas = listaPartidas.FirstOrDefault(n => n.NumeroPartida == numeroPartida); 
             if (partidas != null)
             {
-                //int indice = partidas.FindIndex(p => p.NumeroPartida == numeroPartida);
+                //Actualizar datos partida
                 partidas.Estado = (int)EstadoActualPartida.Finalizada;
                 partidas.FechaFin = DateTime.Now; 
                 partidas.Duracion = partidas.FechaFin - partidas.FechaInicio;
+                //Buscar ganador
+                Resultado<int> ganador = BuscarGanador(partidas);
+                partidas.DniGanador = ganador.Data;
+                partidas.MotivoVictoria = ganador.Mensaje;
+                Archivos.ActualizarListaJson<PartidaEntities>(listaPartidas, Rutas.ObtenerRuta("partida"));
+
+                //Actualizar estadisticas usuarios 
+                List<UsuarioEntities> jugadores = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios"));
+                List<UsuarioEntities> jugadoresPartida = jugadores.Where(u => partidas.ListaDni.Contains(u.Dni)).ToList();
+                foreach (UsuarioEntities j in  jugadoresPartida)
+                {
+                    j.EstadisticasJugador.PartidasJugadas += 1;
+                    
+                    if (j.Dni == ganador.Data)
+                    {
+                        j.EstadisticasJugador.PartidasGanadas += 1;
+                    }
+                    else
+                    {
+                        j.EstadisticasJugador.PartidasPerdidas += 1;
+                    }
+                }
+                Archivos.ActualizarListaJson<UsuarioEntities>(jugadores, Rutas.ObtenerRuta("usuarios"));
+                return ganador;
             }
-        }
+            return new Resultado<int> { Exito = false, Mensaje = "No se ha encontrado la partida", tipoStatusCode = TipoStatusCode.NotFound };
+        }  //
 
         private PartidaEntities MapeoREQaENT(PartidaRequest request)
         {
@@ -218,6 +242,33 @@ namespace EstancieroService
                 return new Resultado<int> { Exito = false, Mensaje = "Los siguientes DNIs no están registrados:" + string.Join(",", usuariosNoRegistrados), tipoStatusCode = TipoStatusCode.BadRequest };  
             }
             return new Resultado<int> { Exito = true };
+        }
+
+        private Resultado<int> BuscarGanador(PartidaEntities partidaTerminada)
+        {
+            List<DetalleUsuarioEntities> jugadores = Archivos.DeserealizarJson<DetalleUsuarioEntities>(Rutas.ObtenerRuta("detalleUsuario")).Where(p => p.NumeroPartida == partidaTerminada.NumeroPartida).ToList();
+            int dniUsuarioGanador = 0;
+            //Verificar condicion unico saldo positivo
+            if (jugadores.Where(s => s.DineroActual > 0).Count() == 1)
+            {
+                dniUsuarioGanador = jugadores.FirstOrDefault(s => s.DineroActual > 0).DniUsuario;
+                return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por ser el único con saldo positivo", Data = dniUsuarioGanador };
+            }
+            int saldoMayor = 0; 
+            foreach (DetalleUsuarioEntities i in jugadores)
+            {
+                if (i.ListaMovimientos.CompraProvincias >= 12)
+                {
+                    dniUsuarioGanador = i.DniUsuario;
+                    return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer 12 o más partidas compradas", Data = dniUsuarioGanador }; 
+                } 
+                if (i.DineroActual >  saldoMayor)
+                {
+                    saldoMayor = i.DineroActual;
+                    dniUsuarioGanador = i.DniUsuario;
+                }
+            }
+            return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Data = dniUsuarioGanador };
         }
     }
 }

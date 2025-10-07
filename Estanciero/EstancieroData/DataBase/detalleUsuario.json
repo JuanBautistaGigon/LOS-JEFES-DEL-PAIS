@@ -1,0 +1,56 @@
+[
+  {
+    "ListaJugadoresPartida": [
+      46653747,
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 1,
+    "DniUsuario": 46653747,
+    "PosicionActual": 0,
+    "DineroActual": 5000000,
+    "ListaMovimientos": {
+      "CompraProvincias": 0,
+      "PagosAlquiler": 0,
+      "PagoMultas": 0,
+      "Premios": 0
+    },
+    "Estado": 1
+  },
+  {
+    "ListaJugadoresPartida": [
+      46653747,
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 1,
+    "DniUsuario": 47074177,
+    "PosicionActual": 0,
+    "DineroActual": 5000000,
+    "ListaMovimientos": {
+      "CompraProvincias": 0,
+      "PagosAlquiler": 0,
+      "PagoMultas": 0,
+      "Premios": 0
+    },
+    "Estado": 1
+  },
+  {
+    "ListaJugadoresPartida": [
+      46653747,
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 1,
+    "DniUsuario": 47207090,
+    "PosicionActual": 0,
+    "DineroActual": 5000000,
+    "ListaMovimientos": {
+      "CompraProvincias": 0,
+      "PagosAlquiler": 0,
+      "PagoMultas": 0,
+      "Premios": 0
+    },
+    "Estado": 1
+  }
+]

@@ -11,8 +11,13 @@ namespace EstancieroService
         //Parámetros: usuarioRequest
         public Resultado<UsuarioEntities> CrearUsuario(UsuarioRequest usuario)
         {
-            var usuarioEntities = MapeoRequestAEntities(usuario);
+            UsuarioEntities usuarioEntities = MapeoRequestAEntities(usuario);
             string ruta = Rutas.ObtenerRuta("usuarios");
+            UsuarioEntities usuarioVerificar = ObtenerUsuarios().FirstOrDefault(x => x.Dni == usuarioEntities.Dni && x.FechaEliminacion == null);
+            if (usuarioVerificar != null)
+            {
+                return new Resultado<UsuarioEntities> { Exito = false, Mensaje = "Ya existe un usuario con ese DNI", Data = null, tipoStatusCode = TipoStatusCode.BadRequest };
+            }
             Archivos.SerializarJson(usuarioEntities, ruta);
             return new Resultado<UsuarioEntities> { Exito = true, Mensaje = "Usuario creado con exito", Data = usuarioEntities, tipoStatusCode = TipoStatusCode.Ok };
         }

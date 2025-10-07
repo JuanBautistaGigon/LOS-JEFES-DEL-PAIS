@@ -17,20 +17,21 @@ namespace EstancieroWebApi.Controllers
          }
          //Ver usuarios registrados
          [HttpGet]
-         public IActionResult ObtenerUsuarios()
-         {
-             var usuarios = usuarioService.ObtenerUsuarios();
-             if (usuarios.Count() >= 1 && ModelState.IsValid)
-             {
-                 return Ok(usuarios);
-             }
-             else
-             {
-                 return NotFound("No se encontraron usuarios");
-             }
-         }
-         //Registrar usuarios
-         [HttpPost]
+        public IActionResult ObtenerUsuarios()
+        {
+            var usuarios = usuarioService.ObtenerUsuarios();
+            var listaUsuariosSinEliminados = usuarios.Where(x => x.FechaEliminacion == null).ToList();
+            if (listaUsuariosSinEliminados.Count() >= 1 && ModelState.IsValid)
+            {
+                return Ok(usuarios);
+            }
+            else
+            {
+                return NotFound("No se encontraron usuarios");
+            }
+        }
+        //Registrar usuarios
+        [HttpPost]
          public IActionResult AgregarUsuario([FromBody] UsuarioRequest usuarioRequest)
          {
              var resultado = usuarioService.CrearUsuario(usuarioRequest);

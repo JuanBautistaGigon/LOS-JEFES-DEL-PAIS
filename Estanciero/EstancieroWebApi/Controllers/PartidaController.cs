@@ -24,8 +24,14 @@ namespace EstancieroWebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             Resultado<int> resultado = partidaService.CrearPartida(partidaRequest);
-            return Ok(resultado.Mensaje);
+
+            if (resultado.Exito)
+            {
+                return Ok(resultado.Mensaje);
+            }
+            return BadRequest(resultado.Mensaje);
         }
 
         //Cambiar el estado de la partida
@@ -52,10 +58,9 @@ namespace EstancieroWebApi.Controllers
 
         //Turno 
         [HttpPut("{numPartida}")]
-        public IActionResult LanzarDado(int numeroPartida)
-
+        public IActionResult LanzarDado(int numPartida)
         {
-            MovimientoResponse movimiento = partidaService.TurnoSiguiente(numeroPartida);
+            MovimientoResponse movimiento = partidaService.TurnoSiguiente(numPartida);
 
             if (movimiento.Success)
             {

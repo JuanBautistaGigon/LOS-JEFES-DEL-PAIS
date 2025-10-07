@@ -11,6 +11,7 @@ namespace EstancieroWebApi.Controllers
     {
         PartidaService partidaService = new PartidaService();
 
+        //Iniciar una partida 
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
         {
@@ -22,6 +23,7 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
 
+        //Cambiar el estado de la partida
         [HttpPut("{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromBody] EstadoActualPartida estadoNuevo)
         {
@@ -35,7 +37,7 @@ namespace EstancieroWebApi.Controllers
                 }
                 return Ok(resultado.Mensaje);
             }
-             resultado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
+            resultado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
             if (!resultado.Exito)
             {
                 return NotFound(resultado.Mensaje);
@@ -43,20 +45,21 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
 
-
-        [HttpPut("{dniJugador}")]
-        public IActionResult LanzarDado(int dniJugador, int casilleroActual)
+        //Turno 
+        [HttpPut("{numeroPartida}")]
+        public IActionResult LanzarDado(int numeroPartida)
 
         {
-            MovimientoResponse dado = partidaService.LanzarDado(dniJugador, casilleroActual);
+            MovimientoResponse movimiento = partidaService.TurnoSiguiente(numeroPartida);
 
-            if (dado is not null)
+            if (movimiento.Success)
             {
-                return Ok($"el numero de dado que salio es {dado}");
+                return Ok(movimiento);
             }
             return BadRequest("ocurrio un error");
         }
 
+        //Comprar propiedad
         [HttpPut ("{dniPropietarioNuevo}")]
         public IActionResult ComprarPropiedad(int dniPropietarioNuevo, int casilleroActual)
         {

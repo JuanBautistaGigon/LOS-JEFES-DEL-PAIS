@@ -72,34 +72,40 @@ namespace EstancieroService
 
         public MovimientoResponse TurnoSiguiente(int numeroPartida)
         {
-            PartidaEntities Partida = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida")).FirstOrDefault(n => n.NumeroPartida == numeroPartida);
+            List<PartidaEntities> listaPartida = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            PartidaEntities Partida = listaPartida.FirstOrDefault(n => n.NumeroPartida == numeroPartida);
             if (Partida is null)
             {
                 return new MovimientoResponse { Success = false };
             }
             
             MovimientoResponse resultado = LanzarDado(Partida);
+            //Acomodar para siguiente turno
             TurnoEntities turnoActual = Partida.ConfiguracionTurnos[0];
             Partida.ConfiguracionTurnos.RemoveAt(0);
             Partida.ConfiguracionTurnos.Add(turnoActual);
             Partida.TurnoActual = Partida.ConfiguracionTurnos[0].DniJugador;
             resultado.Success = true;
+            resultado.SiguienteTurno = $"El siguiente turno es del jugador con DNI: {Partida.TurnoActual}";
+            //Actualizar partida 
+            Archivos.ActualizarListaJson<PartidaEntities>(listaPartida, Rutas.ObtenerRuta("partida"));
             return resultado;
         }
 
         public void ComprarPropiedad(int dniJugador, int casilleroActual)
         {
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
-            string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaPartida = Rutas.ObtenerRuta("partida");
 
             List<DetalleUsuarioEntities> listaDetalleUsuariosAmodificar = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
-            List<TableroEntities> listaTablero = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuariosAmodificar.FirstOrDefault(x => x.DniUsuario == dniJugador);
+            List<PartidaEntities> listaPartida = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida);
+            PartidaEntities partidaActual = listaPartida.FirstOrDefault(p => p.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
 
-            TableroEntities casillero = listaTablero.FirstOrDefault(x => x.NumeroCasillero == casilleroActual);
+            TableroEntities casillero = partidaActual.Tablero[casilleroActual];
             if (casillero != null)
             {
-                DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuariosAmodificar.FirstOrDefault(x => x.DniUsuario == dniJugador);
+                
                 if (casillero.PrecioCompra is not 0 && casillero.DniPropietarioActual is 0 && casillero.PrecioCompra < detalleUsuarioAmodificar.DineroActual)
                 {
                     MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
@@ -113,14 +119,10 @@ namespace EstancieroService
                         FinalizarPartida(detalleUsuarioAmodificar.NumeroPartida);
 
                     }
-
-
-                    Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario);
-                    Archivos.ActualizarListaJson(listaTablero, rutaTablero);
+                    Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario); 
+                    Archivos.ActualizarListaJson(listaPartida, rutaPartida);
                 }
-            }
-            // Lógica para que un jugador compre una propiedad
-            // Parametros: DniJugador, Casillero    
+            } 
         }
 
         public Resultado<int> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
@@ -255,13 +257,10 @@ namespace EstancieroService
 
         private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
         {
-            MovimientoResponse movimientoResponse = new MovimientoResponse();
+            MovimientoResponse movimientoResponse = new MovimientoResponse(); 
 
-            string rutaTablero = Rutas.ObtenerRuta("tablero");
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             string rutaPartida = Rutas.ObtenerRuta("partida");
-
-            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
 
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
 
@@ -272,66 +271,59 @@ namespace EstancieroService
             {
                 detalleUsuarioAmodificar.PosicionActual = casilleroDestino;
 
-                TableroEntities casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroDestino);
                 MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
 
-                if (casillero.TipoCasillero.ToLower() == "premio")
+                if (partidaActual.Tablero[casilleroDestino].TipoCasillero.ToLower() == "premio")
                 {
-                    detalleUsuarioAmodificar.DineroActual += casillero.Monto ?? 0;
+                    detalleUsuarioAmodificar.DineroActual += partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                     movimientos.Premios += 1;
                     movimientoResponse.CantidadPremios = movimientos.Premios;
-                    movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {casillero.Monto}";
+                    movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {partidaActual.Tablero[casilleroDestino].Monto}";
 
                 }
                 else
                 {
-                    if (casillero.TipoCasillero.ToLower() == "multa")
+                    if (partidaActual.Tablero[casilleroDestino].TipoCasillero.ToLower() == "multa")
                     {
-                        detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
+                        detalleUsuarioAmodificar.DineroActual -= partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                         movimientos.PagoMultas += 1;
                         movimientoResponse.CantidadMultas = movimientos.PagoMultas;
-                        movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {casillero.Monto}";
+                        movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {partidaActual.Tablero[casilleroDestino].Monto}";
                     }
                     else
                     {
-                        if (casillero.DniPropietarioActual is not null)
+                        if (partidaActual.Tablero[casilleroDestino].DniPropietarioActual is not null)
                         {
 
-                            DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == casillero.DniPropietarioActual);
+                            DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == partidaActual.Tablero[casilleroDestino].DniPropietarioActual);
 
 
-                            detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
+                            detalleUsuarioAmodificar.DineroActual -= partidaActual.Tablero[casilleroDestino].Monto ?? 0;
 
-                            detallePropietario.DineroActual += casillero.Monto ?? 0;
+                            detallePropietario.DineroActual += partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                             movimientos.PagosAlquiler += 1;
                             movimientoResponse.CantidadAlquileres = movimientos.PagosAlquiler;
-                            movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {casillero.Monto}";
+                            movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {partidaActual.Tablero[casilleroDestino].Monto}";
 
 
                         }
                     }
                 }
-                Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
-                Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
+
 
                 //Posible perdida de jugador
                 if (detalleUsuarioAmodificar.DineroActual < 0)
                 {
-                    detalleUsuarioAmodificar.Estado = 2;
+                    detalleUsuarioAmodificar.Estado = 2; 
                     partidaActual.ConfiguracionTurnos.RemoveAll(t => t.DniJugador == detalleUsuarioAmodificar.DniUsuario);
                     Resultado<int> result = BuscarGanador(partidaActual);
                     if (result.Exito)
                     {
                         FinalizarPartida(partidaActual.NumeroPartida);
                     }
-                    else
-                    {
-                        detalleUsuarioAmodificar.Estado = 2;
-                    }
                 }
-
-
-                return movimientoResponse;
+                Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
+                return movimientoResponse;  
             }
             movimientoResponse.Descripcion = "Caiste en un casillero de provincia sin propietario";
             return movimientoResponse;

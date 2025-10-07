@@ -14,6 +14,7 @@ namespace EstancieroWebApi.Controllers
         {
             usuarioService = new UsuarioService();
         }
+        //Ver usuarios registrados
         [HttpGet]
         public IActionResult ObtenerUsuarios()
         {
@@ -27,11 +28,12 @@ namespace EstancieroWebApi.Controllers
                 return NotFound("No se encontraron usuarios");
             }
         }
+        //Registrar usuarios
         [HttpPost]
         public IActionResult AgregarUsuario([FromBody] UsuarioRequest usuarioRequest)
         {
             var resultado = usuarioService.CrearUsuario(usuarioRequest);
-            if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.Ok)
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
                 return Ok(resultado.Mensaje);
             }
@@ -44,11 +46,11 @@ namespace EstancieroWebApi.Controllers
         public IActionResult ModificarUsuario([FromBody] UsuarioRequest usuarioRequest)
         {
             var resultado = usuarioService.ModificarUsuario(usuarioRequest);
-            if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.Ok)
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
                 return Ok(resultado.Mensaje);
             }
-            else if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.NotFound)
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
                 return NotFound(resultado.Mensaje);
             }
@@ -61,11 +63,11 @@ namespace EstancieroWebApi.Controllers
         public IActionResult EliminarUsuario(int dni)
         {
             var resultado = usuarioService.EliminarUsuario(dni);
-            if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.Ok)
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
                 return Ok(resultado.Mensaje);
             }
-            else if (resultado.tipoStatusCode == EstancieroEntities.TipoStatusCode.NotFound)
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
                 return NotFound(resultado.Mensaje);
             }

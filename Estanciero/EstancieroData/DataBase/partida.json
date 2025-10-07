@@ -2,9 +2,9 @@
   {
     "NumeroPartida": 1,
     "FechaInicio": "2025-10-07T14:05:49.4373868-03:00",
-    "FechaFin": null,
-    "Duracion": null,
-    "Estado": 1,
+    "FechaFin": "2025-10-07T15:03:01.1422517-03:00",
+    "Duracion": "00:57:11.7048649",
+    "Estado": 2,
     "TurnoActual": 46653747,
     "ConfiguracionTurnos": [
       {
@@ -306,7 +306,7 @@
       47074177,
       47207090
     ],
-    "DniGanador": null,
-    "MotivoVictoria": null
+    "DniGanador": 46653747,
+    "MotivoVictoria": "El jugador 46653747 ha ganado la partida por poseer el mayor saldo"
   }
 ]

@@ -35,29 +35,32 @@ namespace EstancieroWebApi.Controllers
         }
 
         //Cambiar el estado de la partida
-        [HttpPut("{numeroPartida}")]
-        public IActionResult CambiarEstado(int numeroPartida, [FromBody] EstadoActualPartida estadoNuevo)
+        [HttpPut("CambiarEstadoPartida/{numeroPartida}")]
+        public IActionResult CambiarEstado(int numeroPartida, [FromQuery] EstadoActualPartida estadoNuevo)
         {
             Resultado<int> resultado = new Resultado<int>();
             if (estadoNuevo == EstadoActualPartida.Finalizada || estadoNuevo == EstadoActualPartida.Suspendida)
             {
                 resultado = partidaService.FinalizarPartida(numeroPartida);
-                if (!resultado.Exito)
-                {
-                    return NotFound(resultado.Mensaje);
-                }
-                return Ok(resultado.Mensaje);
             }
-            resultado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
-            if (!resultado.Exito)
+            else
+            {
+                resultado = partidaService.CambiarEstadoPartida(numeroPartida, estadoNuevo);
+            }
+
+            if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
                 return NotFound(resultado.Mensaje);
+            }
+            if (resultado.tipoStatusCode == TipoStatusCode.BadRequest)
+            {
+                return BadRequest(resultado.Mensaje);
             }
             return Ok(resultado.Mensaje);
         }
 
         //Turno 
-        [HttpPut("{numPartida}")]
+        [HttpPut("LanzarDado/{numPartida}")]
         public IActionResult LanzarDado(int numPartida)
         {
             MovimientoResponse movimiento = partidaService.TurnoSiguiente(numPartida);
@@ -70,7 +73,7 @@ namespace EstancieroWebApi.Controllers
         }
 
         //Comprar propiedad
-        [HttpPut ("{dniPropietarioNuevo}")]
+        [HttpPut ("ComprarPropiedad/{dniPropietarioNuevo}")]
         public IActionResult ComprarPropiedad(int dniPropietarioNuevo, int casilleroActual)
         {
             partidaService.ComprarPropiedad(dniPropietarioNuevo, casilleroActual);

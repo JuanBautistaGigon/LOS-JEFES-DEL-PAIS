@@ -6,9 +6,9 @@
     "FechaRegistro": "2025-10-07T13:54:36.2103245-03:00",
     "FechaEliminacion": null,
     "EstadisticasJugador": {
-      "PartidasJugadas": 0,
+      "PartidasJugadas": 2,
       "PartidasGanadas": 0,
-      "PartidasPerdidas": 0,
+      "PartidasPerdidas": 2,
       "PartidasPendientes": 0
     }
   },
@@ -19,9 +19,9 @@
     "FechaRegistro": "2025-10-07T13:55:06.7710211-03:00",
     "FechaEliminacion": "2025-10-07T14:01:39.0003169-03:00",
     "EstadisticasJugador": {
-      "PartidasJugadas": 0,
+      "PartidasJugadas": 2,
       "PartidasGanadas": 0,
-      "PartidasPerdidas": 0,
+      "PartidasPerdidas": 2,
       "PartidasPendientes": 0
     }
   },
@@ -32,9 +32,9 @@
     "FechaRegistro": "2025-10-07T13:55:21.1828993-03:00",
     "FechaEliminacion": null,
     "EstadisticasJugador": {
-      "PartidasJugadas": 0,
+      "PartidasJugadas": 2,
       "PartidasGanadas": 0,
-      "PartidasPerdidas": 0,
+      "PartidasPerdidas": 2,
       "PartidasPendientes": 0
     }
   },
@@ -45,8 +45,8 @@
     "FechaRegistro": "2025-10-07T13:56:30.2727056-03:00",
     "FechaEliminacion": null,
     "EstadisticasJugador": {
-      "PartidasJugadas": 0,
-      "PartidasGanadas": 0,
+      "PartidasJugadas": 2,
+      "PartidasGanadas": 2,
       "PartidasPerdidas": 0,
       "PartidasPendientes": 0
     }

@@ -4,7 +4,7 @@ using EstancieroRequest;
 using Microsoft.AspNetCore.Mvc;
 namespace EstancieroWebApi.Controllers
 {
-    [Route("tablero")]
+    [Route("[controller]")]
     [ApiController]
     public class TableroController : ControllerBase
     {

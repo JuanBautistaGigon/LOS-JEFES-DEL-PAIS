@@ -2,14 +2,19 @@
 using EstancieroResponse;
 using EstancieroService;
 using EstancieroRequest;
-using EstancieroEntities;
+
 namespace EstancieroWebApi.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class PartidaController : ControllerBase
     {
-        PartidaService partidaService = new PartidaService();
+        private PartidaService partidaService;
+
+        public PartidaController()
+        {
+            partidaService = new PartidaService();
+        }
 
         //Iniciar una partida 
         [HttpPost]
@@ -46,7 +51,7 @@ namespace EstancieroWebApi.Controllers
         }
 
         //Turno 
-        [HttpPut("{numeroPartida}")]
+        [HttpPut("{numPartida}")]
         public IActionResult LanzarDado(int numeroPartida)
 
         {
@@ -67,5 +72,6 @@ namespace EstancieroWebApi.Controllers
 
             return Ok("propiedad comprada con exito");
         }
+        
     }
 }

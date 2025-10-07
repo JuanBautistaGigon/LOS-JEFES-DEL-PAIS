@@ -13,5 +13,5 @@ namespace EstancieroResponse
             public T? Data { get; set; }
             public TipoStatusCode tipoStatusCode { get; set; }
         }
-    }
 }
+

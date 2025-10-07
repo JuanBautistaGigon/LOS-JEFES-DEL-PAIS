@@ -70,108 +70,21 @@ namespace EstancieroService
 
         }//
 
-        public MovimientoResponse LanzarDado(int dniJugador, int casilleroActual)
+        public MovimientoResponse TurnoSiguiente(int numeroPartida)
         {
-
-            int casilleroDestino = 0;
-
-            Random rand = new Random();
-
-            int numeroDado = rand.Next(1, 7);
-
-            casilleroDestino = casilleroActual + numeroDado;
-            //Cambio agregado por Facu, si el casillero destino es mayor a 30, que vuelva a empezar desde el 0 + los lugares que le falten (Ver como adaptarlo a cualquier tablero)
-            if (casilleroDestino > 30)
+            PartidaEntities Partida = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida")).FirstOrDefault(n => n.NumeroPartida == numeroPartida);
+            if (Partida is null)
             {
-                int casillerosTotales = 31;
-                casilleroDestino = (casilleroActual + numeroDado) % casillerosTotales;
+                return new MovimientoResponse { Success = false };
             }
-            MovimientoResponse movimiento = MoverJugador(dniJugador, casilleroDestino);
-            movimiento.NumeroDado = numeroDado;
-            movimiento.CasilleroDestino = casilleroDestino;
-
-            return movimiento;
-        }
-
-        public MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
-        {
-            MovimientoResponse movimientoResponse = new MovimientoResponse();
-
-            string rutaTablero = Rutas.ObtenerRuta("tablero");
-            string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
-            string rutaPartida = Rutas.ObtenerRuta("partida");
-
-            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
-
-            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
-
-            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
-            PartidaEntities partidaActual = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
-
-            if (detalleUsuarioAmodificar is not null)
-            {
-                detalleUsuarioAmodificar.PosicionActual = casilleroDestino;
-
-                TableroEntities casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroDestino);
-                MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
-
-                if (casillero.TipoCasillero.ToLower() == "premio")
-                {
-                    detalleUsuarioAmodificar.DineroActual += casillero.Monto ?? 0;
-                    movimientos.Premios += 1;
-                    movimientoResponse.CantidadPremios = movimientos.Premios;
-                    movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {casillero.Monto}";
-
-                }
-                else
-                {
-                    if (casillero.TipoCasillero.ToLower() == "multa")
-                    {
-                        detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
-                        movimientos.PagoMultas += 1;
-                        movimientoResponse.CantidadMultas = movimientos.PagoMultas;
-                        movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {casillero.Monto}";
-                    }
-                    else
-                    {
-                        if (casillero.DniPropietarioActual is not null)
-                        {
-
-                            DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == casillero.DniPropietarioActual);
-
-
-                            detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
-
-                            detallePropietario.DineroActual += casillero.Monto ?? 0;
-                            movimientos.PagosAlquiler += 1;
-                            movimientoResponse.CantidadAlquileres = movimientos.PagosAlquiler;
-                            movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {casillero.Monto}";
-
-
-                        }
-                    }
-                }
-                Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
-                Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
-
-                if (detalleUsuarioAmodificar.DineroActual < 0)
-                {
-                    Resultado<int> result = BuscarGanador(partidaActual);
-                    if (result.Exito)
-                    {
-                        FinalizarPartida(partidaActual.NumeroPartida);
-                    }
-                    else
-                    {
-                        detalleUsuarioAmodificar.Estado = 2;
-                    }
-                }
-
-
-                return movimientoResponse;
-            }
-            movimientoResponse.Descripcion = "Caiste en un casillero de provincia sin propietario";
-            return movimientoResponse;
+            
+            MovimientoResponse resultado = LanzarDado(Partida);
+            TurnoEntities turnoActual = Partida.ConfiguracionTurnos[0];
+            Partida.ConfiguracionTurnos.RemoveAt(0);
+            Partida.ConfiguracionTurnos.Add(turnoActual);
+            Partida.TurnoActual = Partida.ConfiguracionTurnos[0].DniJugador;
+            resultado.Success = true;
+            return resultado;
         }
 
         public void ComprarPropiedad(int dniJugador, int casilleroActual)
@@ -310,6 +223,121 @@ namespace EstancieroService
             }
             return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Data = dniUsuarioGanador };
         }
+
+        private MovimientoResponse LanzarDado(PartidaEntities partidaActual)
+        {
+            string rutadetalle = Rutas.ObtenerRuta("detalleUsuario");
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutadetalle);
+
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == partidaActual.TurnoActual);
+
+            int casilleroDestino = 0;
+            int casillerosTotales = 30;
+
+            Random rand = new Random();
+
+            int numeroDado = rand.Next(1, 7);
+
+            casilleroDestino = detalleUsuarioAmodificar.PosicionActual + numeroDado;
+            //Cambio agregado por Facu, si el casillero destino es mayor a 30, que vuelva a empezar desde el 0 + los lugares que le falten (Ver como adaptarlo a cualquier tablero)
+            if (casilleroDestino > casillerosTotales)
+            {
+                //int casillerosTotales = 31;
+                //casilleroDestino = (casilleroActual + numeroDado) % casillerosTotales;
+                casilleroDestino = casilleroDestino - casillerosTotales - 1;
+            }
+            MovimientoResponse movimiento = MoverJugador(detalleUsuarioAmodificar.DniUsuario, casilleroDestino);
+            movimiento.NumeroDado = numeroDado;
+            movimiento.CasilleroDestino = casilleroDestino;
+
+            return movimiento;
+        }
+
+        private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+        {
+            MovimientoResponse movimientoResponse = new MovimientoResponse();
+
+            string rutaTablero = Rutas.ObtenerRuta("tablero");
+            string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
+            string rutaPartida = Rutas.ObtenerRuta("partida");
+
+            List<TableroEntities> listaCasilleros = Archivos.DeserealizarJson<TableroEntities>(rutaTablero);
+
+            List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
+
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
+            PartidaEntities partidaActual = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
+
+            if (detalleUsuarioAmodificar is not null)
+            {
+                detalleUsuarioAmodificar.PosicionActual = casilleroDestino;
+
+                TableroEntities casillero = listaCasilleros.FirstOrDefault(x => x.NumeroCasillero == casilleroDestino);
+                MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
+
+                if (casillero.TipoCasillero.ToLower() == "premio")
+                {
+                    detalleUsuarioAmodificar.DineroActual += casillero.Monto ?? 0;
+                    movimientos.Premios += 1;
+                    movimientoResponse.CantidadPremios = movimientos.Premios;
+                    movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {casillero.Monto}";
+
+                }
+                else
+                {
+                    if (casillero.TipoCasillero.ToLower() == "multa")
+                    {
+                        detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
+                        movimientos.PagoMultas += 1;
+                        movimientoResponse.CantidadMultas = movimientos.PagoMultas;
+                        movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {casillero.Monto}";
+                    }
+                    else
+                    {
+                        if (casillero.DniPropietarioActual is not null)
+                        {
+
+                            DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == casillero.DniPropietarioActual);
+
+
+                            detalleUsuarioAmodificar.DineroActual -= casillero.Monto ?? 0;
+
+                            detallePropietario.DineroActual += casillero.Monto ?? 0;
+                            movimientos.PagosAlquiler += 1;
+                            movimientoResponse.CantidadAlquileres = movimientos.PagosAlquiler;
+                            movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {casillero.Monto}";
+
+
+                        }
+                    }
+                }
+                Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
+                Archivos.ActualizarListaJson(listaCasilleros, rutaTablero);
+
+                //Posible perdida de jugador
+                if (detalleUsuarioAmodificar.DineroActual < 0)
+                {
+                    detalleUsuarioAmodificar.Estado = 2;
+                    partidaActual.ConfiguracionTurnos.RemoveAll(t => t.DniJugador == detalleUsuarioAmodificar.DniUsuario);
+                    Resultado<int> result = BuscarGanador(partidaActual);
+                    if (result.Exito)
+                    {
+                        FinalizarPartida(partidaActual.NumeroPartida);
+                    }
+                    else
+                    {
+                        detalleUsuarioAmodificar.Estado = 2;
+                    }
+                }
+
+
+                return movimientoResponse;
+            }
+            movimientoResponse.Descripcion = "Caiste en un casillero de provincia sin propietario";
+            return movimientoResponse;
+        }
+
+
     }
     /*Cosas a implementar Dia Martes:
      1. Si el saldoActual del usuario en la partida es menor al alquiler que debe pagar, se debe cambiar su estado en la partida (En juego a Derrotado)

@@ -185,14 +185,6 @@ namespace EstancieroService
             return new Resultado<int> { Exito = false, Mensaje = "No se ha encontrado la partida", tipoStatusCode = TipoStatusCode.NotFound };
         }  //
 
-        private PartidaEntities MapeoREQaENT(PartidaRequest request)
-        {
-            return new PartidaEntities
-            {
-                ListaDni = request.Dnis
-            };
-        }
-
         private Resultado<int> VerificarUsuarios(List<int> dnisUsuarios)
         {
             List<int> usuariosRegistrados = Archivos.DeserealizarJson<UsuarioEntities>(Rutas.ObtenerRuta("usuarios"))
@@ -301,7 +293,7 @@ namespace EstancieroService
                     }
                     else
                     {
-                        if (partidaActual.Tablero[casilleroDestino].DniPropietarioActual is not null)
+                        if (partidaActual.Tablero[casilleroDestino].DniPropietarioActual is not 0)
                         {
 
                             DetalleUsuarioEntities detallePropietario = listaDetalleUsuario.FirstOrDefault(p => p.DniUsuario == partidaActual.Tablero[casilleroDestino].DniPropietarioActual);
@@ -338,7 +330,13 @@ namespace EstancieroService
             return movimientoResponse;
         }
 
-
+        private PartidaEntities MapeoREQaENT(PartidaRequest request)
+        {
+            return new PartidaEntities
+            {
+                ListaDni = request.Dnis
+            };
+        }
     }
     /*Cosas a implementar Dia Martes:
      1. Si el saldoActual del usuario en la partida es menor al alquiler que debe pagar, se debe cambiar su estado en la partida (En juego a Derrotado)

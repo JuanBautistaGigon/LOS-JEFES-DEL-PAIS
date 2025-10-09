@@ -1,0 +1,288 @@
+/* Estilos para partida.html - Para completar por los alumnos */
+
+/* COMPLETAR: Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* COMPLETAR: Estilos del body */
+body {
+    font-family: Arial, sans-serif;
+    color: #373636;
+    background-color: #a49c9c;
+}
+
+/* COMPLETAR: Header */
+header {
+    color: white;
+    padding: 20px;
+    text-align: center;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* COMPLETAR: Main */
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+/* COMPLETAR: Footer */
+footer {
+    color: #373636;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+/* COMPLETAR: Página de partida */
+.partida-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* COMPLETAR: Panel de jugadores */
+.panel-jugadores {
+    padding: 20px;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+.panel-jugadores h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    /* COMPLETAR: Agregar color */
+}
+
+.jugadores-info {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.jugador-info {
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+.jugador-info h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    /* COMPLETAR: Agregar color */
+}
+
+.jugador-info p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    /* COMPLETAR: Agregar color */
+}
+
+/* COMPLETAR: Tablero */
+.tablero-container {
+    padding: 20px;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+.tablero-container h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    /* COMPLETAR: Agregar color */
+}
+
+.tablero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* COMPLETAR: Casillero inicial */
+.casillero-inicial {
+    color: white;
+    font-weight: bold;
+    width: 120px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+.numero-casillero {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.jugadores-en-casillero {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+}
+
+/* COMPLETAR: Casilleros del tablero */
+.casilleros-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.casillero {
+    width: 80px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-size: 12px;
+    text-align: center;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+/* COMPLETAR: Efecto hover del casillero */
+.casillero:hover {
+    /* COMPLETAR: Agregar efecto hover */
+}
+
+/* COMPLETAR: Casillero activo */
+.casillero.activo {
+    /* COMPLETAR: Agregar estilos para casillero activo */
+}
+
+/* COMPLETAR: Estilos para jugador 1 */
+.casillero.jugador1 {
+    /* COMPLETAR: Agregar estilos para jugador 1 */
+}
+
+/* COMPLETAR: Estilos para jugador 2 */
+.casillero.jugador2 {
+    /* COMPLETAR: Agregar estilos para jugador 2 */
+}
+
+/* COMPLETAR: Panel de acciones */
+.panel-acciones {
+    padding: 20px;
+    text-align: center;
+    /* COMPLETAR: Agregar color de fondo */
+    /* COMPLETAR: Agregar borde */
+}
+
+.panel-acciones h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    /* COMPLETAR: Agregar color */
+}
+
+.dado-resultado {
+    margin-top: 15px;
+    padding: 10px;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+.dado-resultado p {
+    font-size: 16px;
+    font-weight: bold;
+    /* COMPLETAR: Agregar color */
+}
+
+/* COMPLETAR: Botones */
+.boton-control {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 5px;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+/* COMPLETAR: Efecto hover del botón de control */
+.boton-control:hover {
+    /* COMPLETAR: Agregar efecto hover */
+}
+
+/* COMPLETAR: Estilos del botón deshabilitado */
+.boton-control:disabled {
+    /* COMPLETAR: Agregar estilos para botón deshabilitado */
+}
+
+.boton-accion {
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 0;
+    /* COMPLETAR: Agregar color de fondo */
+}
+
+/* COMPLETAR: Efecto hover del botón de acción */
+.boton-accion:hover {
+    /* COMPLETAR: Agregar efecto hover */
+}
+
+/* COMPLETAR: Estilos del botón de acción deshabilitado */
+.boton-accion:disabled {
+    /* COMPLETAR: Agregar estilos para botón deshabilitado */
+}
+
+/* COMPLETAR: Responsive */
+@media (max-width: 768px) {
+    .jugadores-info {
+        flex-direction: column;
+    }
+    
+    .casilleros-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .casillero {
+        width: 60px;
+        height: 50px;
+        font-size: 10px;
+    }
+    
+    .casillero-inicial {
+        width: 100px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .casilleros-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .casillero {
+        width: 50px;
+        height: 40px;
+        font-size: 9px;
+    }
+}

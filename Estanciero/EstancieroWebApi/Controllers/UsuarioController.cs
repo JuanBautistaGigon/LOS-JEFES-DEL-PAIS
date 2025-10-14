@@ -30,7 +30,7 @@ namespace EstancieroWebApi.Controllers
                 return NotFound("No se encontraron usuarios");
             }
         }
-        //Registrar usuarios
+        //Registrar usuarios *
         [HttpPost]
          public IActionResult AgregarUsuario([FromBody] UsuarioRequest usuarioRequest)
          {

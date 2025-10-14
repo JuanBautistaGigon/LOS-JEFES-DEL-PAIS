@@ -50,5 +50,18 @@
       "PartidasPerdidas": 0,
       "PartidasPendientes": 0
     }
+  },
+  {
+    "Dni": 100000000,
+    "Nombre": "string",
+    "Email": "user@example.com",
+    "FechaRegistro": "2025-10-14T14:33:01.5163454-03:00",
+    "FechaEliminacion": null,
+    "EstadisticasJugador": {
+      "PartidasJugadas": 0,
+      "PartidasGanadas": 0,
+      "PartidasPerdidas": 0,
+      "PartidasPendientes": 0
+    }
   }
 ]

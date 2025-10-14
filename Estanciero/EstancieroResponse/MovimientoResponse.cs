@@ -15,6 +15,7 @@ namespace EstancieroResponse
         public string Descripcion { get; set; }
         public int? CantidadMultas { get; set; }
         public int? CantidadAlquileres { get; set; }
+        public int? CantidadPropiedades { get; set; }
         public bool Success { get; set; }
         public string SiguienteTurno { get; set; }
     }

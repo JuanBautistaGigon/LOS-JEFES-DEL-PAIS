@@ -72,14 +72,14 @@ namespace EstancieroWebApi.Controllers
             return BadRequest("ocurrio un error");
         }
 
-        //Comprar propiedad
+        /*Comprar propiedad
         [HttpPut("ComprarPropiedad/{dniPropietarioNuevo}")]
         public IActionResult ComprarPropiedad(int dniPropietarioNuevo, int casilleroActual)
         {
             partidaService.ComprarPropiedad(dniPropietarioNuevo, casilleroActual);
 
             return Ok("propiedad comprada con exito");
-        }
+        }*/
 
     }
 }

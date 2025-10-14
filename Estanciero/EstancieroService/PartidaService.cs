@@ -92,7 +92,7 @@ namespace EstancieroService
             return resultado;
         }
 
-        public void ComprarPropiedad(int dniJugador, int casilleroActual)
+        /*public void ComprarPropiedad(int dniJugador, int casilleroActual)
         {
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             string rutaPartida = Rutas.ObtenerRuta("partida");
@@ -105,7 +105,7 @@ namespace EstancieroService
             TableroEntities casillero = partidaActual.Tablero[casilleroActual];
             if (casillero != null)
             {
-                
+
                 if (casillero.PrecioCompra is not 0 && casillero.DniPropietarioActual is 0 && casillero.PrecioCompra < detalleUsuarioAmodificar.DineroActual)
                 {
                     MovimientosEntities movimientos = detalleUsuarioAmodificar.ListaMovimientos;
@@ -119,11 +119,11 @@ namespace EstancieroService
                         FinalizarPartida(detalleUsuarioAmodificar.NumeroPartida);
 
                     }
-                    Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario); 
+                    Archivos.ActualizarListaJson(listaDetalleUsuariosAmodificar, rutaDetalleUsuario);
                     Archivos.ActualizarListaJson(listaPartida, rutaPartida);
                 }
-            } 
-        }
+            }
+        }*/
 
         public Resultado<int> CambiarEstadoPartida(int numeroPartida, EstadoActualPartida estadoNuevo)
         {
@@ -278,6 +278,7 @@ namespace EstancieroService
                 {
                     detalleUsuarioAmodificar.DineroActual += partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                     movimientos.Premios += 1;
+                    movimientoResponse.DineroActual = detalleUsuarioAmodificar.DineroActual;
                     movimientoResponse.CantidadPremios = movimientos.Premios;
                     movimientoResponse.Descripcion = $"Caiste en un casillero con premio, se te suma {partidaActual.Tablero[casilleroDestino].Monto}";
 
@@ -288,6 +289,7 @@ namespace EstancieroService
                     {
                         detalleUsuarioAmodificar.DineroActual -= partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                         movimientos.PagoMultas += 1;
+                        movimientoResponse.DineroActual = detalleUsuarioAmodificar.DineroActual;
                         movimientoResponse.CantidadMultas = movimientos.PagoMultas;
                         movimientoResponse.Descripcion = $"Caiste en un casillero con multa, se te descuenta {partidaActual.Tablero[casilleroDestino].Monto}";
                     }
@@ -303,10 +305,22 @@ namespace EstancieroService
 
                             detallePropietario.DineroActual += partidaActual.Tablero[casilleroDestino].Monto ?? 0;
                             movimientos.PagosAlquiler += 1;
+                            movimientoResponse.DineroActual = detalleUsuarioAmodificar.DineroActual;
                             movimientoResponse.CantidadAlquileres = movimientos.PagosAlquiler;
                             movimientoResponse.Descripcion = $"Caiste en un casillero con alquiler, se te descuenta {partidaActual.Tablero[casilleroDestino].Monto}";
 
 
+                        }
+                        else
+                        {
+                            if (partidaActual.Tablero[casilleroDestino].PrecioCompra is not 0 && partidaActual.Tablero[casilleroDestino].DniPropietarioActual is 0 && partidaActual.Tablero[casilleroDestino].PrecioCompra < detalleUsuarioAmodificar.DineroActual)
+                            {
+                                detalleUsuarioAmodificar.DineroActual -= partidaActual.Tablero[casilleroDestino].PrecioCompra ?? 0;
+                                movimientos.CompraProvincias += 1;
+                                movimientoResponse.DineroActual = detalleUsuarioAmodificar.DineroActual;
+                                movimientoResponse.CantidadPropiedades = movimientos.CompraProvincias;
+                                movimientoResponse.Descripcion = $"Caiste en un casillero de propiedad sin dueno, se te descuenta {partidaActual.Tablero[casilleroDestino].PrecioCompra} y tienes en tu poder la provincia {partidaActual.Tablero[casilleroDestino].NombreProvincia}";
+                            }
                         }
                     }
                 }

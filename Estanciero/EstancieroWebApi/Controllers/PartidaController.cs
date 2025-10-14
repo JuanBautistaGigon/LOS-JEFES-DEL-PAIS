@@ -16,7 +16,7 @@ namespace EstancieroWebApi.Controllers
             partidaService = new PartidaService();
         }
 
-        //Iniciar una partida 
+        //Iniciar una partida *
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
         {
@@ -33,7 +33,7 @@ namespace EstancieroWebApi.Controllers
             }
             return BadRequest(resultado.Mensaje);
         }
-
+        
         //Cambiar el estado de la partida
         [HttpPut("CambiarEstadoPartida/{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromQuery] EstadoActualPartida estadoNuevo)
@@ -57,6 +57,20 @@ namespace EstancieroWebApi.Controllers
                 return BadRequest(resultado.Mensaje);
             }
             return Ok(resultado.Mensaje);
+        }
+        
+        [HttpGet("ReanudarPartida/{numeroPartida2}")]
+        public IActionResult ReanudarPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(resultado);
+            } else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(resultado);
+            }
+            return BadRequest(resultado);
         }
 
         //Turno 

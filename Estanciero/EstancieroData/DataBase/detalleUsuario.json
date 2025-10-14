@@ -25,12 +25,12 @@
     ],
     "NumeroPartida": 1,
     "DniUsuario": 47074177,
-    "PosicionActual": 11,
-    "DineroActual": 5050000,
+    "PosicionActual": 14,
+    "DineroActual": 5035000,
     "ListaMovimientos": {
       "CompraProvincias": 0,
       "PagosAlquiler": 0,
-      "PagoMultas": 0,
+      "PagoMultas": 1,
       "Premios": 1
     },
     "Estado": 1

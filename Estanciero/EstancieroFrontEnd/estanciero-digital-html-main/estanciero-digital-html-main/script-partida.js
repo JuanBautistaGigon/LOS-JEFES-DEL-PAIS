@@ -38,7 +38,7 @@ function validarEmail(email) {
 // Función para cargar jugadores registrados
 async function cargarJugadoresRegistrados() {
     try {
-        const response = await fetch(`URL JUGADORES`);
+        const response = await fetch(`${API_BASE_URL}/Usuario`);
         
         if (response.ok) {
             const jugadores = await response.json();
@@ -92,6 +92,7 @@ async function inicializarPartida() {
     }
 }
 
+//Analizar 
 async function cargarPartidaCompleta() {
     try {
         // Cargar información básica de la partida
@@ -127,7 +128,7 @@ async function cargarPartidaCompleta() {
         throw error;
     }
 }
-
+//Analizar 
 async function cargarDetallesJugadores() {
     if (!numeroPartidaActual) {
         return;
@@ -246,8 +247,8 @@ async function lanzarDado() {
     
     try {
         // Llamar a la API para lanzar el dado
-        const response = await fetch(`URL LANZAR DADO`, {
-            method: 'POST',
+        const response = await fetch(`${API_BASE_URL}/Partida/LanzarDado/${numeroPartidaActual}`, {
+            method: /*'POST'*/ 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             }

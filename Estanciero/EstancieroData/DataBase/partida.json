@@ -5,12 +5,8 @@
     "FechaFin": "2025-10-07T15:03:01.1422517-03:00",
     "Duracion": "00:57:11.7048649",
     "Estado": 2,
-    "TurnoActual": 47074177,
+    "TurnoActual": 47207090,
     "ConfiguracionTurnos": [
-      {
-        "NumeroTurno": 2,
-        "DniJugador": 47074177
-      },
       {
         "NumeroTurno": 3,
         "DniJugador": 47207090
@@ -18,6 +14,10 @@
       {
         "NumeroTurno": 1,
         "DniJugador": 46653747
+      },
+      {
+        "NumeroTurno": 2,
+        "DniJugador": 47074177
       }
     ],
     "Tablero": [

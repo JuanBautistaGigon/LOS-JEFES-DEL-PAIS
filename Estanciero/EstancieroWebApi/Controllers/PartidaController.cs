@@ -59,6 +59,7 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
         
+        //Reanudar una partida *
         [HttpGet("ReanudarPartida/{numeroPartida2}")]
         public IActionResult ReanudarPartida(int numeroPartida)
         {
@@ -73,7 +74,7 @@ namespace EstancieroWebApi.Controllers
             return BadRequest(resultado);
         }
 
-        //Turno 
+        //Turno *
         [HttpPut("LanzarDado/{numPartida}")]
         public IActionResult LanzarDado(int numPartida)
         {

@@ -66,7 +66,7 @@ namespace EstancieroService
             }
 
             Archivos.SerializarJson<PartidaEntities>(nuevaPartidaEntities, Rutas.ObtenerRuta("partida"));
-            return new Resultado<int> { Mensaje = $"Partida creada exitosamente. Partida N° {nuevaPartidaEntities.NumeroPartida}", Exito = true, tipoStatusCode = TipoStatusCode.Ok };
+            return new Resultado<int> { Mensaje = $"Partida creada exitosamente. Partida N° {nuevaPartidaEntities.NumeroPartida}", Exito = true, tipoStatusCode = TipoStatusCode.Ok, Data = nuevaPartidaEntities.NumeroPartida };
 
         }//
 
@@ -78,7 +78,7 @@ namespace EstancieroService
             {
                 return new MovimientoResponse { Success = false };
             }
-            
+
             MovimientoResponse resultado = LanzarDado(Partida);
             //Acomodar para siguiente turno
             TurnoEntities turnoActual = Partida.ConfiguracionTurnos[0];
@@ -134,7 +134,7 @@ namespace EstancieroService
                 PartidaEntities partidaEncontrada = partidas.FirstOrDefault(p => p.NumeroPartida == numeroPartida);
                 if (partidaEncontrada.Estado == (int)EstadoActualPartida.Finalizada || partidaEncontrada.Estado == (int)EstadoActualPartida.Suspendida)
                 {
-                    return new Resultado<int> { Exito = false, Mensaje = "No se puede cambiar el estado de una partida finalizada o suspendida", tipoStatusCode = TipoStatusCode.BadRequest};
+                    return new Resultado<int> { Exito = false, Mensaje = "No se puede cambiar el estado de una partida finalizada o suspendida", tipoStatusCode = TipoStatusCode.BadRequest };
                 }
                 partidaEncontrada.Estado = (int)estadoNuevo;
                 Archivos.ActualizarListaJson<PartidaEntities>(partidas, Rutas.ObtenerRuta("partida"));
@@ -258,7 +258,7 @@ namespace EstancieroService
 
         private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
         {
-            MovimientoResponse movimientoResponse = new MovimientoResponse(); 
+            MovimientoResponse movimientoResponse = new MovimientoResponse();
 
             string rutaDetalleUsuario = Rutas.ObtenerRuta("detalleUsuario");
             string rutaPartida = Rutas.ObtenerRuta("partida");
@@ -329,7 +329,7 @@ namespace EstancieroService
                 //Posible perdida de jugador
                 if (detalleUsuarioAmodificar.DineroActual < 0)
                 {
-                    detalleUsuarioAmodificar.Estado = 2; 
+                    detalleUsuarioAmodificar.Estado = 2;
                     partidaActual.ConfiguracionTurnos.RemoveAll(t => t.DniJugador == detalleUsuarioAmodificar.DniUsuario);
                     Resultado<int> result = BuscarGanador(partidaActual);
                     if (result.Exito)
@@ -338,7 +338,7 @@ namespace EstancieroService
                     }
                 }
                 Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);
-                return movimientoResponse;  
+                return movimientoResponse;
             }
             movimientoResponse.Descripcion = "Caiste en un casillero de provincia sin propietario";
             return movimientoResponse;

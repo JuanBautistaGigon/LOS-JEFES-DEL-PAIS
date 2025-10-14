@@ -29,11 +29,20 @@ namespace EstancieroWebApi.Controllers
 
             if (resultado.Exito)
             {
-                return Ok(resultado.Mensaje);
+                return Ok(new
+                {
+                    success = true,
+                    data = new { numeroPartida = resultado.Data },
+                    message = resultado.Mensaje
+                }); ;
             }
-            return BadRequest(resultado.Mensaje);
+            return BadRequest(new
+            {
+                success = false,
+                message = resultado.Mensaje
+            });
         }
-        
+
         //Cambiar el estado de la partida
         [HttpPut("CambiarEstadoPartida/{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromQuery] EstadoActualPartida estadoNuevo)
@@ -58,7 +67,7 @@ namespace EstancieroWebApi.Controllers
             }
             return Ok(resultado.Mensaje);
         }
-        
+
         //Reanudar una partida *
         [HttpGet("ReanudarPartida/{numeroPartida2}")]
         public IActionResult ReanudarPartida(int numeroPartida)
@@ -67,7 +76,8 @@ namespace EstancieroWebApi.Controllers
             if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
                 return Ok(resultado);
-            } else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            }
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
                 return NotFound(resultado);
             }

@@ -63,5 +63,18 @@
       "PartidasPerdidas": 0,
       "PartidasPendientes": 0
     }
+  },
+  {
+    "Dni": 45200900,
+    "Nombre": "baulo",
+    "Email": "baulo@gmail.com",
+    "FechaRegistro": "2025-10-14T19:27:09.4359826-03:00",
+    "FechaEliminacion": null,
+    "EstadisticasJugador": {
+      "PartidasJugadas": 0,
+      "PartidasGanadas": 0,
+      "PartidasPerdidas": 0,
+      "PartidasPendientes": 0
+    }
   }
 ]

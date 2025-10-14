@@ -94,8 +94,22 @@ async function crearNuevaPartida() {
     const dniJugador1 = document.getElementById('dniJugador1').value;
     const dniJugador2 = document.getElementById('dniJugador2').value;
     
-    //SE PUEDEN REALIZAR VALIDACIONES DE LOS DNI
-    
+    // --- Validaciones ---
+    let esValido = true;
+    if (!dniJugador1) {
+        mostrarErrorCampo('errorDni1', 'Debe seleccionar al jugador 1.');
+        esValido = false;
+    }
+    if (!dniJugador2) {
+        mostrarErrorCampo('errorDni2', 'Debe seleccionar al jugador 2.');
+        esValido = false;
+    }
+    if (dniJugador1 && dniJugador1 === dniJugador2) {
+        mostrarErrorCampo('errorDni2', 'Los jugadores deben ser diferentes.');
+        esValido = false;
+    }
+
+    if (!esValido) return; // Si no es válido, no continuamos
     try {
         // Crear partida usando la API
         const response = await fetch(`${API_BASE_URL}/Partida`, {
@@ -104,7 +118,7 @@ async function crearNuevaPartida() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                DnisJugadores: [dniJugador1, dniJugador2]
+                dnis: [dniJugador1, dniJugador2]
             })
         });
         
@@ -167,8 +181,6 @@ function actualizarSelectoresJugadores() {
     const selects = [
         document.getElementById('dniJugador1'),
         document.getElementById('dniJugador2'),
-        document.getElementById('dniJugador3'),
-        document.getElementById('dniJugador4')
     ];
 
     selects.forEach((select, i) => {

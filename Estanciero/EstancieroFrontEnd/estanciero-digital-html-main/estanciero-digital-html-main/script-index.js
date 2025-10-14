@@ -6,7 +6,7 @@ let partidaActual = null;
 let jugadoresRegistrados = []; 
 let numeroPartidaActual = null;
 let detallesJugadores = [];
-const API_BASE_URL = 'URL API';
+const API_BASE_URL = 'http://localhost:5070';
 
 // Funciones de utilidad
 function mostrarError(mensaje) {
@@ -37,7 +37,7 @@ function validarEmail(email) {
 // Función para cargar jugadores registrados
 async function cargarJugadoresRegistrados() {
     try {
-        const response = await fetch(`URL JUGADORES`);
+        const response = await fetch(`${API_BASE_URL}/Usuario`);
         
         if (response.ok) {
             const jugadores = await response.json();
@@ -55,6 +55,7 @@ async function cargarJugadoresRegistrados() {
         return [];
     }
 }
+
 
 // Inicialización cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -97,7 +98,7 @@ async function crearNuevaPartida() {
     
     try {
         // Crear partida usando la API
-        const response = await fetch(`URL PARTIDA`, {
+        const response = await fetch(`${API_BASE_URL}/Partida`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -134,7 +135,7 @@ async function continuarPartida() {
         
     try {
         // Verificar que la partida existe
-        const response = await fetch(`URL PARTIDA`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/ReanudarPartida/${numeroPartida2}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -150,9 +151,10 @@ async function continuarPartida() {
                 alert('Error al cargar la partida: ' + apiResponse.message);
             }
         } else if (response.status === 404) {
-           //COMPLETAR CODIGO PARA MANEJO DE ERROR 404
+           alert('Error al buscar la partida: ' + apiResponse.message);
         } else {
             //COMPLETAR CODIGO PARA MANEJO DE ERROR
+            alert(apiResponse.message)
         }
         
     } catch (error) {
@@ -162,20 +164,30 @@ async function continuarPartida() {
 }
 
 function actualizarSelectoresJugadores() {
-    const selectJugador1 = document.getElementById('dniJugador1');
-    const selectJugador2 = document.getElementById('dniJugador2');
-    
-    if (selectJugador1 && selectJugador2) {
-        // Asegurar que jugadoresRegistrados sea un array
-        if (!Array.isArray(jugadoresRegistrados)) {
-            jugadoresRegistrados = [];
-        }
-        
-        //COMPLETAR OPCIONES POR DEFECTO DEL SELECTOR
-        
-        // Agregar jugadores
+    const selects = [
+        document.getElementById('dniJugador1'),
+        document.getElementById('dniJugador2'),
+        document.getElementById('dniJugador3'),
+        document.getElementById('dniJugador4')
+    ];
+
+    selects.forEach((select, i) => {
+        if (!select) return;
+
+        select.innerHTML = ''; // limpiar opciones
+
+        const opcionDefecto = document.createElement('option');
+        opcionDefecto.value = '';
+        opcionDefecto.textContent = `Seleccione Jugador ${i + 1}`;
+        select.appendChild(opcionDefecto);
+
         jugadoresRegistrados.forEach(jugador => {
-            //COMPLETAR CODIGO PARA AGREGAR JUGADORES
+            const opcion = document.createElement('option');
+            opcion.value = jugador.dni;
+            opcion.textContent = `${jugador.nombre} ${jugador.apellido}`;
+            select.appendChild(opcion);
         });
-    }
+    });
 }
+
+    

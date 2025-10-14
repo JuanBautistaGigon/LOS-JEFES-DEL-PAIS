@@ -7,7 +7,7 @@ let jugadoresRegistrados = [];
 let numeroPartidaActual = null;
 let detallesJugadores = [];
 
-const API_BASE_URL = 'URL API';
+const API_BASE_URL = 'http://localhost:5070/Partida';
 
 // Funciones de utilidad
 function mostrarError(mensaje) {

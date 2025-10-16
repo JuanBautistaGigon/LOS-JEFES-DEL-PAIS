@@ -15,7 +15,8 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-        [HttpGet("{numeroPartida}")]
+        //Ver partidas 
+        [HttpGet("CargarPartida")]
         public IActionResult ObtenerPartidaActual(int numeroPartida)
         {
             var partidas = partidaService.ObtenerPartida();
@@ -86,20 +87,32 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
 
-        //Reanudar una partida 
-        [HttpGet("ReanudarPartida/{numeroPartida2}")]
+        //Reanudar una partida *
+        [HttpGet("ReanudarPartida")]
         public IActionResult ReanudarPartida(int numeroPartida)
         {
             Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
             if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
-                return Ok(resultado);
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
             }
             else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
-                return NotFound(resultado);
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
             }
-            return BadRequest(resultado);
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje
+            });
         }
 
         //Turno

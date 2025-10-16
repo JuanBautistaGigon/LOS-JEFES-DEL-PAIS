@@ -7,7 +7,7 @@ let jugadoresRegistrados = [];
 let numeroPartidaActual = null;
 let detallesJugadores = [];
 
-const API_BASE_URL = 'http://localhost:5070/Partida';
+const API_BASE_URL = 'http://localhost:5070';
 
 // Funciones de utilidad
 function mostrarError(mensaje) {
@@ -96,7 +96,7 @@ async function inicializarPartida() {
 async function cargarPartidaCompleta() {
     try {
         // Cargar información básica de la partida
-        const response = await fetch(`URL PARTIDA POR ID`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/CargarPartida?numeroPartida=${numeroPartidaActual}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ async function cargarDetallesJugadores() {
     
     try {
         // Usar el nuevo endpoint para obtener todos los detalles de la partida
-        const response = await fetch(`URL DETALLES JUGADORES PARTIDA POR ID`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/CargarPartida?numeroPartida=${numeroPartidaActual}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

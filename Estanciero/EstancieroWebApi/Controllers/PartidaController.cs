@@ -15,7 +15,25 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-
+        [HttpGet]
+        public IActionResult ObtenerPartidaActual(int numeroPartida)
+        {
+            var partidas = partidaService.ObtenerPartida();
+            var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartida);
+            if (partidaActual != null)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    data = partidaActual,
+                    message = "Partida obtenida correctamente"
+                }); ;
+            }
+            else
+            {
+                return NotFound("No se encontro partida");
+            }
+        }
         //Iniciar una partida *
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
@@ -31,14 +49,14 @@ namespace EstancieroWebApi.Controllers
             {
                 return Ok(new
                 {
-                    success = true,
+                    success = resultado.Exito,
                     data = new { numeroPartida = resultado.Data },
                     message = resultado.Mensaje
                 }); ;
             }
             return BadRequest(new
             {
-                success = false,
+                success = resultado.Exito,
                 message = resultado.Mensaje
             });
         }
@@ -68,7 +86,7 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
 
-        //Reanudar una partida *
+        //Reanudar una partida 
         [HttpGet("ReanudarPartida/{numeroPartida2}")]
         public IActionResult ReanudarPartida(int numeroPartida)
         {
@@ -84,7 +102,7 @@ namespace EstancieroWebApi.Controllers
             return BadRequest(resultado);
         }
 
-        //Turno *
+        //Turno
         [HttpPut("LanzarDado/{numPartida}")]
         public IActionResult LanzarDado(int numPartida)
         {

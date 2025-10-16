@@ -351,6 +351,11 @@ namespace EstancieroService
                 ListaDni = request.Dnis
             };
         }
+        public List<PartidaEntities> ObtenerPartida()
+        {
+            List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
+            return listaPartidas;
+        }
     }
     /*Cosas a implementar Dia Martes:
      1. Si el saldoActual del usuario en la partida es menor al alquiler que debe pagar, se debe cambiar su estado en la partida (En juego a Derrotado)

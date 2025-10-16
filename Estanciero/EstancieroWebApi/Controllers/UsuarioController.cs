@@ -15,7 +15,7 @@ namespace EstancieroWebApi.Controllers
         {
             usuarioService = new UsuarioService();
         }
-        //Ver usuarios registrados
+        //Ver usuarios registrados *
         [HttpGet]
         public IActionResult ObtenerUsuarios()
         {
@@ -26,7 +26,7 @@ namespace EstancieroWebApi.Controllers
                 return Ok(new
                 {
                     success = true,
-                    data = usuarios,
+                    data = listaUsuariosSinEliminados,
                     message = "Usuarios obtenidos correctamente"
                 }); ;
             }
@@ -35,7 +35,7 @@ namespace EstancieroWebApi.Controllers
                 return NotFound("No se encontraron usuarios");
             }
         }
-        //Registrar usuarios *
+        //Registrar usuarios 
         [HttpPost]
         public IActionResult AgregarUsuario([FromBody] UsuarioRequest usuarioRequest)
         {

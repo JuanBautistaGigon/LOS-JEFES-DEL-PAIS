@@ -15,7 +15,7 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-        [HttpGet]
+        [HttpGet("{numeroPartida}")]
         public IActionResult ObtenerPartidaActual(int numeroPartida)
         {
             var partidas = partidaService.ObtenerPartida();

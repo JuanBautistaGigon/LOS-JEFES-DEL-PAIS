@@ -90,10 +90,12 @@ function inicializarInicio() {
     });
 }
 
+// Reemplaza tu función actual con esta en script-index.js
 async function crearNuevaPartida() {
+    limpiarErrores(); // Limpiar errores al inicio
     const dniJugador1 = document.getElementById('dniJugador1').value;
     const dniJugador2 = document.getElementById('dniJugador2').value;
-    
+
     // --- Validaciones ---
     let esValido = true;
     if (!dniJugador1) {
@@ -109,36 +111,36 @@ async function crearNuevaPartida() {
         esValido = false;
     }
 
-    if (!esValido) return; // Si no es válido, no continuamos
+    if (!esValido) return; // Si no es válido, no continuamos
+
     try {
-        // Crear partida usando la API
         const response = await fetch(`${API_BASE_URL}/Partida`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
+            // ✨ CORRECCIÓN #1: El nombre de la propiedad debe coincidir con tu API (listaDni)
             body: JSON.stringify({
                 dnis: [dniJugador1, dniJugador2]
             })
         });
         
-        if (response.ok) {
-            const apiResponse = await response.json();
-            if (apiResponse.success) {
-                const numeroPartida = apiResponse.data.numeroPartida;
-                // Redirigir a la página de partida con el número de partida
-                window.location.href = `partida.html?partida=${numeroPartida}`;
-            } else {
-                alert('Error al crear la partida: ' + apiResponse.message);
-            }
-        } else {
-            const error = await response.json();
-            alert('Error al crear la partida: ' + (error.message || 'Error desconocido'));
-        }
+        const apiResponse = await response.json();
         
+        if (!response.ok || !apiResponse.success) {
+            throw new Error(apiResponse.message || 'Error desconocido del servidor.');
+        }
+
+        const numeroPartida = apiResponse.data.numeroPartida;
+        
+        if (!numeroPartida) {
+             throw new Error("La API no devolvió un número de partida válido.");
+        }
+
+        // ✨ CORRECCIÓN #2: El nombre del parámetro en la URL debe ser "partida"
+        window.location.href = `partida.html?numeroPartida=${numeroPartida}`;
+
     } catch (error) {
         console.error('Error al crear partida:', error);
-        alert('Error al crear la partida. Verifique que la API esté funcionando.');
+        alert(`Error al crear la partida: ${error.message}`);
     }
 }
 
@@ -160,7 +162,7 @@ async function continuarPartida() {
             const apiResponse = await response.json();
             if (apiResponse.success) {
                 // Redirigir a la página de partida con el número de partida
-                window.location.href = `partida.html?partida=${numeroPartida}`;
+                window.location.href = `partida.html?numeroPartida=${numeroPartida}`;
             } else {
                 alert('Error al cargar la partida: ' + apiResponse.message);
             }

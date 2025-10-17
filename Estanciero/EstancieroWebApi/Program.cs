@@ -1,14 +1,29 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// --- SECCIÓN 1: REGISTRO DE SERVICIOS ---
+
+// 1. Definimos la política de CORS aquí, al registrar el servicio.
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            // Para desarrollo, permitimos cualquier origen.
+            // Para producción, deberías cambiarlo a: policy.WithOrigins("http://tu-dominio.com")
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors();
+
 var app = builder.Build();
+
+// --- SECCIÓN 2: PIPELINE DE PETICIONES (MIDDLEWARE) ---
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -17,15 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// 2. Colocamos UseCors() en la posición correcta: ANTES de la autorización y los controladores.
+app.UseCors();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(builder =>
-{
-    builder
-        .AllowAnyOrigin() // Reemplaza con el dominio de tu sitio web
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-});
 app.Run();

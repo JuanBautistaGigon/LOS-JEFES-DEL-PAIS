@@ -15,25 +15,25 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-        [HttpGet("{numeroPartida}")]
-        public IActionResult ObtenerPartidaActual(int numeroPartida)
-        {
-            var partidas = partidaService.ObtenerPartida();
-            var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartida);
-            if (partidaActual != null)
+            [HttpGet("{numeroPartidaa}")]
+            public IActionResult ObtenerPartidaActual(int numeroPartidaa)
             {
-                return Ok(new
+                var partidas = partidaService.ObtenerPartida();
+                var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartidaa);
+                if (partidaActual != null)
                 {
-                    success = true,
-                    data = partidaActual,
-                    message = "Partida obtenida correctamente"
-                }); ;
+                    return Ok(new
+                    {
+                        success = true,
+                        data = partidaActual,
+                        message = "Partida obtenida correctamente"
+                    }); ;
+                }
+                else
+                {
+                    return NotFound("No se encontro partida");
+                }
             }
-            else
-            {
-                return NotFound("No se encontro partida");
-            }
-        }
         //Iniciar una partida *
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)

@@ -151,7 +151,7 @@ async function continuarPartida() {
         
     try {
         // Verificar que la partida existe
-        const response = await fetch(`${API_BASE_URL}/Partida/ReanudarPartida/${numeroPartida}`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/ReanudarPartida?numeroPartida=${numeroPartida}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

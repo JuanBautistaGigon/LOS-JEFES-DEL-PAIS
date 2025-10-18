@@ -117,7 +117,6 @@ async function crearNuevaPartida() {
         const response = await fetch(`${API_BASE_URL}/Partida`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // ✨ CORRECCIÓN #1: El nombre de la propiedad debe coincidir con tu API (listaDni)
             body: JSON.stringify({
                 dnis: [dniJugador1, dniJugador2]
             })
@@ -135,7 +134,6 @@ async function crearNuevaPartida() {
              throw new Error("La API no devolvió un número de partida válido.");
         }
 
-        // ✨ CORRECCIÓN #2: El nombre del parámetro en la URL debe ser "partida"
         window.location.href = `partida.html?numeroPartida=${numeroPartida}`;
 
     } catch (error) {

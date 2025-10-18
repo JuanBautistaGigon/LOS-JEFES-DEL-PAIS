@@ -73,23 +73,32 @@ namespace EstancieroService
         public MovimientoResponse TurnoSiguiente(int numeroPartida)
         {
             List<PartidaEntities> listaPartida = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
-            PartidaEntities Partida = listaPartida.FirstOrDefault(n => n.NumeroPartida == numeroPartida);
-            if (Partida is null)
+            PartidaEntities partida = listaPartida.FirstOrDefault(n => n.NumeroPartida == numeroPartida);
+            if (partida is null)
             {
-                return new MovimientoResponse { Success = false };
+                return new MovimientoResponse { Success = false, Descripcion = $"No se encontró la partida número {numeroPartida}." };
             }
-
-            MovimientoResponse resultado = LanzarDado(Partida);
+            MovimientoResponse resultado = LanzarDado(partida);
             //Acomodar para siguiente turno
-            TurnoEntities turnoActual = Partida.ConfiguracionTurnos[0];
-            Partida.ConfiguracionTurnos.RemoveAt(0);
-            Partida.ConfiguracionTurnos.Add(turnoActual);
-            Partida.TurnoActual = Partida.ConfiguracionTurnos[0].DniJugador;
-            resultado.Success = true;
-            resultado.SiguienteTurno = $"El siguiente turno es del jugador con DNI: {Partida.TurnoActual}";
+            TurnoEntities turnoActual = partida.ConfiguracionTurnos[0];
+            partida.ConfiguracionTurnos.RemoveAt(0);
+            partida.ConfiguracionTurnos.Add(turnoActual);
+            partida.TurnoActual = partida.ConfiguracionTurnos[0].DniJugador;
             //Actualizar partida 
             Archivos.ActualizarListaJson<PartidaEntities>(listaPartida, Rutas.ObtenerRuta("partida"));
-            return resultado;
+            return new MovimientoResponse
+            {
+                Success = true,
+                CantidadAlquileres = resultado.CantidadAlquileres,
+                CantidadMultas = resultado.CantidadMultas,
+                CantidadPremios = resultado.CantidadPremios,
+                CantidadPropiedades = resultado.CantidadPropiedades,
+                CasilleroDestino = resultado.CasilleroDestino,
+                DineroActual = resultado.DineroActual,
+                NumeroDado = resultado.NumeroDado,
+                Descripcion = "Movimiento realizado correctamente.",
+                SiguienteTurno = $"El siguiente turno es del jugador con DNI: {partida.TurnoActual}"
+            };
         }
 
         /*public void ComprarPropiedad(int dniJugador, int casilleroActual)

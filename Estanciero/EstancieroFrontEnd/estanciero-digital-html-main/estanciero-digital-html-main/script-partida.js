@@ -87,7 +87,6 @@ async function inicializarPartida() {
     console.log("Se intentará cargar la partida con el ID:", idPartida);
 
     try {
-        // ✨ CORRECCIÓN #1: Pasamos el ID directamente a la función
         await cargarPartidaCompleta(idPartida);
         
         crearTablero();
@@ -99,7 +98,7 @@ async function inicializarPartida() {
     }
 }
 
-// ✨ CORRECCIÓN #2: La función ahora recibe el ID como parámetro
+// La función ahora recibe el ID como parámetro
 async function cargarPartidaCompleta(idPartida) {
     try {
         // ✨ CORRECCIÓN #3: Usamos el parámetro 'idPartida' en lugar de la variable global
@@ -135,18 +134,6 @@ function configurarEventosPartida(idPartida) {
     document.getElementById('btnLanzarDado').addEventListener('click', () => lanzarDado(idPartida));
     // ... y así con el resto de los botones (pausar, reanudar, etc.)
 }
-
-async function lanzarDado(idPartida) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/Partida/LanzarDado/${idPartida}`, { method: 'PUT' });
-        // ... resto de la lógica ...
-        await cargarPartidaCompleta(idPartida);
-    } catch (error) {
-        // ... manejo de error ...
-    }
-}
-
-
 // ... (El resto de tus funciones como crearTablero, etc. pueden quedar como estaban) ...
 //Analizar 
 async function cargarDetallesJugadores() {
@@ -161,7 +148,7 @@ async function cargarDetallesJugadores() {
             headers: {
                 'Content-Type': 'application/json',
             }
-        });
+        }); 
         
         if (response.ok) {
             const apiResponse = await response.json();
@@ -259,7 +246,8 @@ function configurarEventosPartida() {
     btnSuspender.addEventListener('click', suspenderPartida);
 }
 
-async function lanzarDado(idPartida) {
+async function lanzarDado() {
+    const idPartida = partidaActual.numeroPartida;
     if (!partidaActual || partidaActual.estado !== 1) {
         console.log(partidaActual.estado);
         alert('La partida no está en juego o está pausada/suspendida');
@@ -268,7 +256,8 @@ async function lanzarDado(idPartida) {
     
     try {
         // Llamar a la API para lanzar el dado
-        const response = await fetch(`${API_BASE_URL}/LanzarDado/3`, {
+        console.log("ID PARTIDA:", idPartida);
+        const response = await fetch(`${API_BASE_URL}/LanzarDado?numPartida=${encodeURIComponent(idPartida)}`, {
             method: /*'POST'*/ 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -283,8 +272,9 @@ async function lanzarDado(idPartida) {
         }
         
         const apiResponse = await response.json();
+
         if (!apiResponse.success) {
-            alert(`ERROR: ${apiResponse.message || 'Errorr al lanzar el dado'}`);
+            alert(`ERROR: ${apiResponse.message || 'Error al lanzar el dado'}`);
             return;
         }
         
@@ -292,8 +282,8 @@ async function lanzarDado(idPartida) {
         const resultadoDado = apiResponse.data;
         
         // Mostrar popup con el resultado del dado
-        const mensajePopup = apiResponse.data;
-        
+       const resultado = apiResponse.data;
+        const mensajePopup = `${resultado.descripcion}\nNúmero del dado: ${resultado.numeroDado}\n${resultado.siguienteTurno}`;
         alert(mensajePopup);
         
         // Después de que el usuario acepte el mensaje, recargar la página completa

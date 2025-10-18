@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EstancieroRequest;
 using EstancieroResponse;
 using EstancieroService;
-using EstancieroRequest;
+using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EstancieroWebApi.Controllers
 {
@@ -15,25 +16,25 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-            [HttpGet("{numeroPartidaa}")]
-            public IActionResult ObtenerPartidaActual(int numeroPartidaa)
+        [HttpGet("{numeroPartidaa}")]
+        public IActionResult ObtenerPartidaActual(int numeroPartidaa)
+        {
+            var partidas = partidaService.ObtenerPartida();
+            var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartidaa);
+            if (partidaActual != null)
             {
-                var partidas = partidaService.ObtenerPartida();
-                var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartidaa);
-                if (partidaActual != null)
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        success = true,
-                        data = partidaActual,
-                        message = "Partida obtenida correctamente"
-                    }); ;
-                }
-                else
-                {
-                    return NotFound("No se encontro partida");
-                }
+                    success = true,
+                    data = partidaActual,
+                    message = "Partida obtenida correctamente"
+                }); ;
             }
+            else
+            {
+                return NotFound("No se encontro partida");
+            }
+        }
         //Iniciar una partida *
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
@@ -86,33 +87,42 @@ namespace EstancieroWebApi.Controllers
             return Ok(resultado.Mensaje);
         }
 
-        //Reanudar una partida 
-        [HttpGet("ReanudarPartida/{numeroPartida2}")]
+        //Reanudar una partida *
+        [HttpGet("ReanudarPartida")]
         public IActionResult ReanudarPartida(int numeroPartida)
         {
             Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
             if (resultado.tipoStatusCode == TipoStatusCode.Ok)
             {
-                return Ok(resultado);
+                return Ok(new { success = true });
             }
             else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
             {
-                return NotFound(resultado);
+                return NotFound(new { success = false });
             }
-            return BadRequest(resultado);
+            return BadRequest(new { success = false });
         }
 
         //Turno
-        [HttpPut("LanzarDado/{numPartida}")]
-        public IActionResult LanzarDado(int numPartida)
+        [HttpPut("LanzarDado")]
+        public IActionResult LanzarDado([FromQuery] int numPartida)
         {
             MovimientoResponse movimiento = partidaService.TurnoSiguiente(numPartida);
 
             if (movimiento.Success)
             {
-                return Ok(movimiento);
+                return Ok(new
+                {
+                    success = movimiento.Success,
+                    data = movimiento,
+                    message = movimiento.Descripcion
+                }); ;
             }
-            return BadRequest("ocurrio un error");
+            return BadRequest(new
+            {
+                success = movimiento.Success,
+                message = movimiento.Descripcion
+            }); ;
         }
 
         /*Comprar propiedad

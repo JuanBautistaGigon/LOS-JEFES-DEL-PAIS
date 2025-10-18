@@ -1,4 +1,5 @@
-﻿using EstancieroRequest;
+﻿using EstancieroEntities;
+using EstancieroRequest;
 using EstancieroResponse;
 using EstancieroService;
 using Microsoft.AspNetCore.Mvc;
@@ -123,6 +124,107 @@ namespace EstancieroWebApi.Controllers
                 success = movimiento.Success,
                 message = movimiento.Descripcion
             }); ;
+        }
+        //Pausar una partida
+        [HttpPut("PausarPartida/{numeroPartida}")]
+        public IActionResult PausarPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.Pausada);
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
+            }
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            });
+        }
+        //Continuar una partida pausada 
+        [HttpPut("ContinuarPartida/{numeroPartida}")]
+        public IActionResult ContinuarPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            });
+        }
+        //Suspender una partida 
+        [HttpPut("SuspenderPartida/{numeroPartida}")]
+        public IActionResult SuspenderPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.Suspendida);
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            });
+        }
+        [HttpGet("ObtenerDetallesJugadores/{numeroPartida}")]
+        public IActionResult ObtenerDetallesJugadores(int numeroPartida)
+        {
+            Resultado<List<DetalleUsuarioEntities>> resultado = partidaService.ObtenerDetallesUsuarios(numeroPartida);
+            if (resultado.Exito)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    data = resultado.Data,
+                    message = resultado.Mensaje
+                });
+            }
+            return NotFound(new
+            {
+                success = resultado.Exito,
+                data = resultado.Data,
+                message = resultado.Mensaje,
+            });
         }
 
         /*Comprar propiedad

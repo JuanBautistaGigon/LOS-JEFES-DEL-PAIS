@@ -194,15 +194,14 @@ namespace EstancieroService
             return new Resultado<int> { Exito = false, Mensaje = "No se ha encontrado la partida", tipoStatusCode = TipoStatusCode.NotFound };
         }  //
 
-        public Resultado<DetalleUsuarioEntities> ObtenerDetallesUsuarios(int numeroPartida)
+        public Resultado<List<DetalleUsuarioEntities>> ObtenerDetallesUsuarios(int numeroPartida)
         {
-            DetalleUsuarioEntities detalleUsuarios = Archivos.DeserealizarJson<DetalleUsuarioEntities>(Rutas.ObtenerRuta("detalleUsuario"))
-                .FirstOrDefault(n => n.NumeroPartida == numeroPartida);
+            List<DetalleUsuarioEntities> detalleUsuarios = Archivos.DeserealizarJson<DetalleUsuarioEntities>(Rutas.ObtenerRuta("detalleUsuario")).Where(n => n.NumeroPartida == numeroPartida).ToList();
             if (detalleUsuarios != null)
             {
-                return new Resultado<DetalleUsuarioEntities> { Exito = true, Mensaje = "Detalles de usuarios obtenidos correctamente", tipoStatusCode = TipoStatusCode.Ok, Data = detalleUsuarios };
+                return new Resultado<List<DetalleUsuarioEntities>> { Exito = true, Mensaje = "Detalles de usuarios obtenidos correctamente", tipoStatusCode = TipoStatusCode.Ok, Data = detalleUsuarios };
             }
-            return new Resultado<DetalleUsuarioEntities> { Exito = false, Mensaje = "No se ha encontrado detalles de usuarios para la partida indicada", tipoStatusCode = TipoStatusCode.NotFound, Data = null };
+            return new Resultado<List<DetalleUsuarioEntities>> { Exito = false, Mensaje = "No se ha encontrado detalles de usuarios para la partida indicada", tipoStatusCode = TipoStatusCode.NotFound, Data = null };
         }
 
         private Resultado<int> VerificarUsuarios(List<int> dnisUsuarios)

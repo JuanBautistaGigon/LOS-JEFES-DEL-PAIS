@@ -7,7 +7,7 @@ let jugadoresRegistrados = [];
 let numeroPartidaActual = null;
 let detallesJugadores = [];
 
-const API_BASE_URL = 'http://localhost:5070/Partida';
+const API_BASE_URL = 'http://localhost:5070';
 
 // Funciones de utilidad
 function mostrarError(mensaje) {
@@ -102,7 +102,7 @@ async function inicializarPartida() {
 async function cargarPartidaCompleta(idPartida) {
     try {
         // ✨ CORRECCIÓN #3: Usamos el parámetro 'idPartida' en lugar de la variable global
-        const response = await fetch(`${API_BASE_URL}/${idPartida}`);
+        const response = await fetch(`${API_BASE_URL}/Partida/${idPartida}`);
         
         if (!response.ok) {
             const errorText = await response.text(); 
@@ -133,6 +133,9 @@ async function cargarPartidaCompleta(idPartida) {
 function configurarEventosPartida(idPartida) {
     document.getElementById('btnLanzarDado').addEventListener('click', () => lanzarDado(idPartida));
     // ... y así con el resto de los botones (pausar, reanudar, etc.)
+    document.getElementById('btnPausar').addEventListener('click', () => pausarPartida(idPartida));
+    document.getElementById('btnReanudar').addEventListener('click', () => reanudarPartida(idPartida));
+    document.getElementById('btnSuspender').addEventListener('click', () => suspenderPartida(idPartida));
 }
 // ... (El resto de tus funciones como crearTablero, etc. pueden quedar como estaban) ...
 //Analizar 
@@ -143,7 +146,7 @@ async function cargarDetallesJugadores() {
     
     try {
         // Usar el nuevo endpoint para obtener todos los detalles de la partida
-        const response = await fetch(`URL DETALLES JUGADORES PARTIDA POR ID`, {
+        const response = await fetch(`${API_BASE_URL}/ObtenerDetallesJugadores/${numeroPartidaActual}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -152,7 +155,7 @@ async function cargarDetallesJugadores() {
         
         if (response.ok) {
             const apiResponse = await response.json();
-            if (apiResponse.success) {
+                if (apiResponse.success) {
                 // Ordenar jugadores por DNI para mantener orden consistente en pantalla
                 detallesJugadores = apiResponse.data.sort((a, b) => a.dniJugador.localeCompare(b.dniJugador));
             } else {
@@ -198,10 +201,19 @@ function actualizarEstadoPartida(estado) {
     
     if (estado === 'EnJuego') {
         //DESABILITAR LO QUE SEA NECESARIO
+        btnLanzarDado.disabled = false;
+        btnPausar.disabled = false; 
+        btnReanudar.disabled = true;
     } else if (estado === 'Pausada') {
         //DESABILITAR LO QUE SEA NECESARIO
+        btnLanzarDado.disabled = true; 
+        btnPausar.disabled = true;
+        btnReanudar.disabled = false;
     } else if (estado === 'Suspendida' || estado === 'Finalizada') {
         //DESABILITAR LO QUE SEA NECESARIO
+        btnLanzarDado.disabled = true; 
+        btnPausar.disabled = true; 
+        btnReanudar.disabled = true;
     }
 }
 
@@ -257,7 +269,7 @@ async function lanzarDado() {
     try {
         // Llamar a la API para lanzar el dado
         console.log("ID PARTIDA:", idPartida);
-        const response = await fetch(`${API_BASE_URL}/LanzarDado?numPartida=${encodeURIComponent(idPartida)}`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/LanzarDado?numPartida=${encodeURIComponent(idPartida)}`, {
             method: /*'POST'*/ 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -402,9 +414,9 @@ function actualizarInterfaz() {
     }
 }
 
-async function pausarPartida() {
+async function pausarPartida(idPartida) {
     try {
-        const response = await fetch(`URL PARTIDA POR ID`, {
+        const response = await fetch(`${API_BASE_URL}/Partida/PausarPartida/${idPartida}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -415,7 +427,10 @@ async function pausarPartida() {
             const apiResponse = await response.json();
             if (apiResponse.success) {
                 // Recargar la partida para obtener el estado actualizado
-                await cargarPartidaCompleta();
+                await cargarPartidaCompleta(idPartida);
+                document.getElementById('btnLanzarDado').disabled = true; 
+                document.getElementById('btnPausar').disabled = true; 
+                document.getElementById('btnReanudar').disabled = false;
                 alert('Partida pausada');
             } else {
                 alert('Error al pausar la partida: ' + apiResponse.message);
@@ -429,7 +444,7 @@ async function pausarPartida() {
     }
 }
 
-async function reanudarPartida() {
+async function reanudarPartida(idPartida) {
     try {
         const response = await fetch(`URL PARTIDA POR ID`, {
             method: 'PUT',

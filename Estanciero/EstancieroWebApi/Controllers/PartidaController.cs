@@ -2,6 +2,7 @@
 using EstancieroResponse;
 using EstancieroService;
 using EstancieroRequest;
+using EstancieroEntities;
 
 namespace EstancieroWebApi.Controllers
 {
@@ -15,25 +16,25 @@ namespace EstancieroWebApi.Controllers
         {
             partidaService = new PartidaService();
         }
-            [HttpGet("{numeroPartidaa}")]
-            public IActionResult ObtenerPartidaActual(int numeroPartidaa)
+        [HttpGet("{numeroPartidaa}")]
+        public IActionResult ObtenerPartidaActual(int numeroPartidaa)
+        {
+            var partidas = partidaService.ObtenerPartida();
+            var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartidaa);
+            if (partidaActual != null)
             {
-                var partidas = partidaService.ObtenerPartida();
-                var partidaActual = partidas.FirstOrDefault(x => x.NumeroPartida == numeroPartidaa);
-                if (partidaActual != null)
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        success = true,
-                        data = partidaActual,
-                        message = "Partida obtenida correctamente"
-                    }); ;
-                }
-                else
-                {
-                    return NotFound("No se encontro partida");
-                }
+                    success = true,
+                    data = partidaActual,
+                    message = "Partida obtenida correctamente"
+                }); ;
             }
+            else
+            {
+                return NotFound("No se encontro partida");
+            }
+        }
         //Iniciar una partida *
         [HttpPost]
         public IActionResult DarDeAltaPartida([FromBody] PartidaRequest partidaRequest)
@@ -61,7 +62,8 @@ namespace EstancieroWebApi.Controllers
             });
         }
 
-        //Cambiar el estado de la partida
+        //Cambiar el estado de la partida 
+        /*
         [HttpPut("CambiarEstadoPartida/{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromQuery] EstadoActualPartida estadoNuevo)
         {
@@ -85,9 +87,92 @@ namespace EstancieroWebApi.Controllers
             }
             return Ok(resultado.Mensaje);
         }
+        */
+
+        //Pausar una partida
+        [HttpPut("PausarPartida/{numeroPartida}")]
+        public IActionResult PausarPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.Pausada); 
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
+            }
+            else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            });
+        }
+
+        //Continuar una partida pausada 
+        [HttpPut("ContinuarPartida/{numeroPartida}")] 
+        public IActionResult ContinuarPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            } else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            });
+        }
+
+        //Suspender una partida 
+        [HttpPut("SuspenderPartida/{numeroPartida}")] 
+        public IActionResult SuspenderPartida(int numeroPartida)
+        {
+            Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.Suspendida); 
+            if (resultado.tipoStatusCode == TipoStatusCode.Ok)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            } else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)
+            {
+                return NotFound(new
+                {
+                    success = resultado.Exito,
+                    message = resultado.Mensaje,
+                });
+            }
+            return BadRequest(new
+            {
+                success = resultado.Exito,
+                message = resultado.Mensaje,
+            }); 
+        }
 
         //Reanudar una partida 
-        [HttpGet("ReanudarPartida/{numeroPartida2}")]
+        [HttpGet("ReanudarPartida/{numeroPartida}")]
         public IActionResult ReanudarPartida(int numeroPartida)
         {
             Resultado<int> resultado = partidaService.CambiarEstadoPartida(numeroPartida, EstadoActualPartida.EnJuego);
@@ -113,6 +198,27 @@ namespace EstancieroWebApi.Controllers
                 return Ok(movimiento);
             }
             return BadRequest("ocurrio un error");
+        }
+
+        [HttpGet("ObtenerDetallesJugadores/{numeroPartida}")]
+        public IActionResult ObtenerDetallesJugadores(int numeroPartida)
+        {
+            Resultado<DetalleUsuarioEntities> resultado = partidaService.ObtenerDetallesUsuarios(numeroPartida); 
+            if (resultado.Exito)
+            {
+                return Ok(new
+                {
+                    success = resultado.Exito,
+                    data = resultado.Data,
+                    message = resultado.Mensaje
+                });
+            }
+            return NotFound(new
+            {
+                success = resultado.Exito,
+                data = resultado.Data,
+                message = resultado.Mensaje,
+            }); 
         }
 
         /*Comprar propiedad

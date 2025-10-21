@@ -97,7 +97,9 @@ namespace EstancieroService
                 DineroActual = resultado.DineroActual,
                 NumeroDado = resultado.NumeroDado,
                 Descripcion = "Movimiento realizado correctamente.",
-                SiguienteTurno = $"El siguiente turno es del jugador con DNI: {partida.TurnoActual}"
+                SiguienteTurno = $"El siguiente turno es del jugador con DNI: {partida.TurnoActual}",
+                Ganador = resultado.Ganador
+                
             };
         }
 
@@ -146,6 +148,14 @@ namespace EstancieroService
                     return new Resultado<int> { Exito = false, Mensaje = "No se puede cambiar el estado de una partida finalizada o suspendida", tipoStatusCode = TipoStatusCode.BadRequest };
                 }
                 partidaEncontrada.Estado = (int)estadoNuevo;
+
+                if (estadoNuevo == EstadoActualPartida.Finalizada || estadoNuevo == EstadoActualPartida.Suspendida)
+                {
+                    Resultado<int> result = BuscarGanador(partidaEncontrada);
+                    return new Resultado<int> { Ganador = result.Ganador, Mensaje = "Partida suspendida exitosamente", tipoStatusCode = TipoStatusCode.Ok, DniGanador = result.DniGanador };
+
+
+                }
                 Archivos.ActualizarListaJson<PartidaEntities>(partidas, Rutas.ObtenerRuta("partida"));
                 return new Resultado<int> { Exito = true, Mensaje = "Estado modificado exitosamente", tipoStatusCode = TipoStatusCode.Ok };
             }
@@ -227,7 +237,7 @@ namespace EstancieroService
             if (jugadores.Where(s => s.DineroActual > 0).Count() == 1)
             {
                 dniUsuarioGanador = jugadores.FirstOrDefault(s => s.DineroActual > 0).DniUsuario;
-                return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por ser el único con saldo positivo", Data = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok };
+                return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por ser el único con saldo positivo", Ganador = true, DniGanador = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok};
             }
             int saldoMayor = 0;
             foreach (DetalleUsuarioEntities i in jugadores)
@@ -235,7 +245,7 @@ namespace EstancieroService
                 if (i.ListaMovimientos.CompraProvincias >= 12)
                 {
                     dniUsuarioGanador = i.DniUsuario;
-                    return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer 12 o más partidas compradas", Data = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok };
+                    return new Resultado<int> { Exito = true, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer 12 o más partidas compradas", Ganador = true, DniGanador = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok };
                 }
                 if (i.DineroActual > saldoMayor)
                 {
@@ -243,7 +253,7 @@ namespace EstancieroService
                     dniUsuarioGanador = i.DniUsuario;
                 }
             }
-            return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Data = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok }; //Utilizar el false para que se pueda diferenciar en "LanzarDado"
+            return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Ganador = true, DniGanador = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok,  }; //Utilizar el false para que se pueda diferenciar en "LanzarDado"
         }
 
         private MovimientoResponse LanzarDado(PartidaEntities partidaActual)
@@ -344,6 +354,18 @@ namespace EstancieroService
                     }
                 }
 
+                if (movimientoResponse.CantidadPropiedades >= 12)
+                {
+                    detalleUsuarioAmodificar.Estado = 2;
+                    Resultado<int> result = BuscarGanador(partidaActual);
+                    if (result.Exito)
+                    {
+                        FinalizarPartida(partidaActual.NumeroPartida);
+                    }
+                    movimientoResponse.Ganador = result.DniGanador;
+                    movimientoResponse.Success = result.Ganador;
+                    movimientoResponse.Descripcion = result.Mensaje;
+                }
 
                 //Posible perdida de jugador
                 if (detalleUsuarioAmodificar.DineroActual < 0)
@@ -353,7 +375,10 @@ namespace EstancieroService
                     Resultado<int> result = BuscarGanador(partidaActual);
                     if (result.Exito)
                     {
-                        FinalizarPartida(partidaActual.NumeroPartida);
+                       Resultado<int> resultado = FinalizarPartida(partidaActual.NumeroPartida);
+                        movimientoResponse.Ganador = resultado.DniGanador;
+                        movimientoResponse.Success = resultado.Ganador;
+                        movimientoResponse.Descripcion = resultado.Mensaje;
                     }
                 }
                 Archivos.ActualizarListaJson(listaDetalleUsuario, rutaDetalleUsuario);

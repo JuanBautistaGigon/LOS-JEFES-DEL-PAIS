@@ -289,6 +289,15 @@ async function lanzarDado() {
             alert(`ERROR: ${apiResponse.message || 'Error al lanzar el dado'}`);
             return;
         }
+
+        if (apiResponse.winner) {
+            await cargarPartidaCompleta(idPartida);
+                    document.getElementById('btnLanzarDado').disabled = true; 
+                document.getElementById('btnPausar').disabled = true; 
+                document.getElementById('btnReanudar').disabled =true;   
+            alert(`PARTIDA FINALIZADA: el dni numero ${apiResponse.dniwinner} gano`)
+
+        }
         
         // La respuesta contiene la información del dado lanzado
         const resultadoDado = apiResponse.data;

@@ -120,7 +120,8 @@ namespace EstancieroWebApi.Controllers
                     success = movimiento.Success,
                     data = movimiento,
                     message = movimiento.Descripcion,
-                    winner = movimiento.Ganador
+                    winner = movimiento.Termino,
+                    dniwinner = movimiento.Ganador
                     
 
                 }); ;

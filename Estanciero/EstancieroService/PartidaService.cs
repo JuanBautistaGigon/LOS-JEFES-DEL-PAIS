@@ -152,7 +152,7 @@ namespace EstancieroService
                 if (estadoNuevo == EstadoActualPartida.Finalizada || estadoNuevo == EstadoActualPartida.Suspendida)
                 {
                     Resultado<int> result = BuscarGanador(partidaEncontrada);
-                    return new Resultado<int> { Ganador = result.Ganador, Mensaje = "Partida suspendida exitosamente", tipoStatusCode = TipoStatusCode.Ok, DniGanador = result.DniGanador };
+                    return new Resultado<int> { Exito = true, Ganador = result.Ganador, Mensaje = "Partida suspendida exitosamente", tipoStatusCode = TipoStatusCode.Ok, DniGanador = result.DniGanador };
 
 
                 }

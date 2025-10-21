@@ -107,10 +107,10 @@ namespace EstancieroWebApi.Controllers
         }
 
         //Turno
-        [HttpPut("LanzarDado")]
-        public IActionResult LanzarDado([FromQuery] int numPartida)
+        [HttpPut("LanzarDado/{npartida}")]
+        public IActionResult LanzarDado(int npartida)
         {
-            MovimientoResponse movimiento = partidaService.TurnoSiguiente(numPartida);
+            MovimientoResponse movimiento = partidaService.TurnoSiguiente(npartida);
 
 
             if (movimiento.Success)
@@ -195,7 +195,7 @@ namespace EstancieroWebApi.Controllers
             {
                 return Ok(new
                 {
-                    success = resultado.Exito,
+                    success = true,
                     message = resultado.Mensaje,
                     winner = resultado.Ganador,
                     dniwinner = resultado.DniGanador
@@ -205,13 +205,13 @@ namespace EstancieroWebApi.Controllers
             {
                 return NotFound(new
                 {
-                    success = resultado.Exito,
+                    success = false,
                     message = resultado.Mensaje,
                 });
             }
             return BadRequest(new
             {
-                success = resultado.Exito,
+                success = false,
                 message = resultado.Mensaje,
             });
         }

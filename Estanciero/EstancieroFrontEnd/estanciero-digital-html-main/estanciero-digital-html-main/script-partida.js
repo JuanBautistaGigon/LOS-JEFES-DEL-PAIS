@@ -269,12 +269,14 @@ async function lanzarDado() {
     try {
         // Llamar a la API para lanzar el dado
         console.log("ID PARTIDA:", idPartida);
-        const response = await fetch(`${API_BASE_URL}/Partida/LanzarDado?numPartida=${encodeURIComponent(idPartida)}`, {
+        const response = await fetch(`http://localhost:5070/Partida/LanzarDado/${idPartida}`, {
             method: /*'POST'*/ 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
+
+       
         
         if (!response.ok) {
             const errorResponse = await response.json();
@@ -285,19 +287,21 @@ async function lanzarDado() {
         
         const apiResponse = await response.json();
 
-        if (!apiResponse.success) {
-            alert(`ERROR: ${apiResponse.message || 'Error al lanzar el dado'}`);
-            return;
-        }
-
-        if (apiResponse.winner) {
+         if (apiResponse.winner) {
             await cargarPartidaCompleta(idPartida);
-                    document.getElementById('btnLanzarDado').disabled = true; 
+                document.getElementById('btnLanzarDado').disabled = true; 
                 document.getElementById('btnPausar').disabled = true; 
                 document.getElementById('btnReanudar').disabled =true;   
             alert(`PARTIDA FINALIZADA: el dni numero ${apiResponse.dniwinner} gano`)
 
         }
+
+        if (!apiResponse.success) {
+            alert(`ERROR: ${apiResponse.message || 'Error al lanzar el dado'}`);
+            return;
+        }
+
+        
         
         // La respuesta contiene la información del dado lanzado
         const resultadoDado = apiResponse.data;
@@ -432,6 +436,7 @@ async function pausarPartida(idPartida) {
             }
         });
         
+        console.log(idPartida)
         if (response.ok) {
             const apiResponse = await response.json();
             if (apiResponse.success) {
@@ -502,14 +507,14 @@ async function suspenderPartida(idPartida) {
                     document.getElementById('btnLanzarDado').disabled = true; 
                 document.getElementById('btnPausar').disabled = true; 
                 document.getElementById('btnReanudar').disabled =true;
-                    alert('Partida suspendida');
+                    alert('Partida suspendida, el ganador es  '  + apiResponse.dniwinner);
                     
                     // Mostrar ganador si hay uno
-                    if (partidaActual && partidaActual.dniGanador) {
+                    /*if (partidaActual && partidaActual.dniGanador) {
                         alert(`¡Partida finalizada! El ganador es: ${partidaActual.dniGanador}`);
-                    }
+                    }*/
                 } else {
-                    alert('Error al suspender la partida: ' + apiResponse.message);
+                    alert('Erroor al suspender la partida: ' + apiResponse.message);
                 }
             } else {
                 alert('Error al suspender la partida');

@@ -64,6 +64,7 @@ namespace EstancieroWebApi.Controllers
         }
 
         //Cambiar el estado de la partida
+        /*
         [HttpPut("CambiarEstadoPartida/{numeroPartida}")]
         public IActionResult CambiarEstado(int numeroPartida, [FromQuery] EstadoActualPartida estadoNuevo)
         {
@@ -87,6 +88,7 @@ namespace EstancieroWebApi.Controllers
             }
             return Ok(resultado.Mensaje);
         }
+        */
 
         //Reanudar una partida *
         [HttpGet("ReanudarPartida")]

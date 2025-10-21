@@ -112,13 +112,17 @@ namespace EstancieroWebApi.Controllers
         {
             MovimientoResponse movimiento = partidaService.TurnoSiguiente(numPartida);
 
+
             if (movimiento.Success)
             {
                 return Ok(new
                 {
                     success = movimiento.Success,
                     data = movimiento,
-                    message = movimiento.Descripcion
+                    message = movimiento.Descripcion,
+                    winner = movimiento.Ganador
+                    
+
                 }); ;
             }
             return BadRequest(new
@@ -192,6 +196,8 @@ namespace EstancieroWebApi.Controllers
                 {
                     success = resultado.Exito,
                     message = resultado.Mensaje,
+                    winner = resultado.Ganador,
+                    dniwinner = resultado.DniGanador
                 });
             }
             else if (resultado.tipoStatusCode == TipoStatusCode.NotFound)

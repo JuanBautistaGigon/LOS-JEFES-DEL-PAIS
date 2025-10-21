@@ -255,7 +255,7 @@ function configurarEventosPartida(idPartida) {
     
     btnPausar.addEventListener('click', () => pausarPartida(idPartida));
     btnReanudar.addEventListener('click', () => reanudarPartida(idPartida));
-    btnSuspender.addEventListener('click', suspenderPartida);
+    btnSuspender.addEventListener('click', () => suspenderPartida(idPartida));
 }
 
 async function lanzarDado() {

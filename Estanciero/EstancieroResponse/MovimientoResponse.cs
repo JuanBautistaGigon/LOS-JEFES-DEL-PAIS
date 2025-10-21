@@ -18,5 +18,8 @@ namespace EstancieroResponse
         public int? CantidadPropiedades { get; set; }
         public bool Success { get; set; }
         public string SiguienteTurno { get; set; }
+        public bool Termino { get; set; }
+        public int Ganador {  get; set; }
+        public int Perdedor { get; set; }
     }
 }

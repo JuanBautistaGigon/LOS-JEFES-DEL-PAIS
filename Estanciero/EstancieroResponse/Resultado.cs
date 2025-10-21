@@ -12,6 +12,9 @@ namespace EstancieroResponse
             public string Mensaje { get; set; }
             public T? Data { get; set; }
             public TipoStatusCode tipoStatusCode { get; set; }
-        }
+
+        public bool Ganador { get; set; }
+        public int DniGanador { get; set; }
+    }
 }
 

@@ -236,5 +236,73 @@
       "Premios": 2
     },
     "Estado": 2
+  },
+  {
+    "ListaJugadoresPartida": [
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 8,
+    "DniUsuario": 47074177,
+    "PosicionActual": 12,
+    "DineroActual": 3665000,
+    "ListaMovimientos": {
+      "CompraProvincias": 8,
+      "PagosAlquiler": 0,
+      "PagoMultas": 4,
+      "Premios": 1
+    },
+    "Estado": 1
+  },
+  {
+    "ListaJugadoresPartida": [
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 8,
+    "DniUsuario": 47207090,
+    "PosicionActual": 15,
+    "DineroActual": 3125000,
+    "ListaMovimientos": {
+      "CompraProvincias": 12,
+      "PagosAlquiler": 0,
+      "PagoMultas": 1,
+      "Premios": 1
+    },
+    "Estado": 2
+  },
+  {
+    "ListaJugadoresPartida": [
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 9,
+    "DniUsuario": 47074177,
+    "PosicionActual": 2,
+    "DineroActual": 2610000,
+    "ListaMovimientos": {
+      "CompraProvincias": 13,
+      "PagosAlquiler": 0,
+      "PagoMultas": 2,
+      "Premios": 0
+    },
+    "Estado": 2
+  },
+  {
+    "ListaJugadoresPartida": [
+      47074177,
+      47207090
+    ],
+    "NumeroPartida": 9,
+    "DniUsuario": 47207090,
+    "PosicionActual": 15,
+    "DineroActual": 3025000,
+    "ListaMovimientos": {
+      "CompraProvincias": 11,
+      "PagosAlquiler": 0,
+      "PagoMultas": 4,
+      "Premios": 0
+    },
+    "Estado": 1
   }
 ]

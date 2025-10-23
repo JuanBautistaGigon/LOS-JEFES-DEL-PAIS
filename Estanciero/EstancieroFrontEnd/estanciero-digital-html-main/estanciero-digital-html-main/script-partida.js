@@ -109,8 +109,8 @@ async function cargarPartidaCompleta(idPartida) {
         }
 
         partidaActual = apiResponse.data;
-        detallesJugadores = partidaActual.listaDni || [];
-        detallesJugadores.sort((a, b) => a == b );
+        detallesJugadores = partidaActual.detallesJugadores || [];
+        detallesJugadores.sort((a, b) => a.dniUsuario.localeCompare (b.dniUsuario) );
 
         // Actualizar la interfaz con los datos frescos
         actualizarInterfazPartida();
@@ -157,6 +157,7 @@ async function cargarDetallesJugadores(idPartida) {
                // detallesJugadores = apiResponse.data.sort((a, b) => a.dniUsuario.localeCompare(b.dniUsuario));
                detallesJugadores = apiResponse.data.sort((a, b) => a.dniUsuario - b.dniUsuario);
                actualizarInterfaz();
+               actualizarPosicionesJugadores();
             } else {
                 console.error('Error al cargar detalles:', apiResponse.message);
                 detallesJugadores = [];
@@ -170,6 +171,8 @@ async function cargarDetallesJugadores(idPartida) {
         detallesJugadores = [];
 }
 }
+
+
 
 function actualizarInterfazPartida() {
     if (!partidaActual) return;
@@ -354,22 +357,24 @@ function actualizarPosicionesJugadores() {
             const esTurnoActual = partidaActual && 
                                 partidaActual.configuracionTurnos && 
                                 partidaActual.configuracionTurnos[partidaActual.turnoActual - 1] &&
-                                (int)(partidaActual.configuracionTurnos[partidaActual.turnoActual - 1].dniUsuario) === (int)(detalleJugador.dniUsario);
+                                partidaActual.configuracionTurnos[partidaActual.turnoActual - 1].dniUsuario === detalleJugador.dniUsuario;
             
             // Asignar color fijo por jugador (basado en el orden de creación)
             let colorFondo;
             if (esTurnoActual) {
-                colorFondo = '#3498db'; // Azul para el jugador que tiene el turno
+                colorFondo = '#db3434ff'; // Rojo para el jugador que tiene el turno
             } else {
                 // Colores fijos por jugador (basado en el índice en la configuración de turnos ordenada por DNI)
-                const turnosOrdenados = [...partidaActual.configuracionTurnos].sort((a, b) => (int)(a.dniUsuario).localeCompare((int)(b.dniUsuario)));
-                const indiceJugador = turnosOrdenados.findIndex(t => (int)(t.dniUsuario) == (int)(detalleJugador.dniUsuario));
+                //turnosOrdenados quedaria con este formato [47207090, 54065432]
+                const turnosOrdenados = [...partidaActual.configuracionTurnos].map(t => t.dniJugador).sort((a, b) => a - b);
+                //Por como quedan los turnosOrdenados modificamos la forma de buscar el indice
+               const indiceJugador = turnosOrdenados.findIndex(t => t === detalleJugador.dniUsuario);
                 switch (indiceJugador) {
                     case 0:
-                        colorFondo = '#e74c3c'; // Rojo para jugador 1
+                        colorFondo = '#d3fd00ff'; // Rojo para jugador 1
                         break;
                     case 1:
-                        colorFondo = '#27ae60'; // Verde para jugador 2
+                        colorFondo = '#1100d0ff'; // Verde para jugador 2
                         break;
                     case 2:
                         colorFondo = '#f39c12'; // Naranja para jugador 3
@@ -383,11 +388,11 @@ function actualizarPosicionesJugadores() {
             }
             
             const indicador = document.createElement('div');
-            indicador.className = indicador-jugador;
+            indicador.className = `indicador-jugador`;
             indicador.textContent = detalleJugador.dniJugador;
             indicador.style.cssText = `
                 background-color: ${colorFondo};
-                color: black;
+                color: white;
                 border-radius: 8px;
                 padding: 4px 8px;
                 min-width: 60px;
@@ -398,7 +403,7 @@ function actualizarPosicionesJugadores() {
                 font-size: 10px;
                 font-weight: bold;
                 white-space: nowrap;
-                border: ${esTurnoActual ? '2px solid #c00000ff' : 'black'};
+                border: ${esTurnoActual ? '2px solid #1600bcff' : 'none'};
             `;
             
             jugadoresEnCasillero.appendChild(indicador);

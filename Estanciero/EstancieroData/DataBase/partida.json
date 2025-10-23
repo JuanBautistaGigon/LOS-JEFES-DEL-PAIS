@@ -2133,5 +2133,615 @@
     ],
     "DniGanador": null,
     "MotivoVictoria": null
+  },
+  {
+    "NumeroPartida": 8,
+    "FechaInicio": "2025-10-22T23:22:09.8793298-03:00",
+    "FechaFin": null,
+    "Duracion": null,
+    "Estado": 1,
+    "TurnoActual": 47074177,
+    "ConfiguracionTurnos": [
+      {
+        "NumeroTurno": 1,
+        "DniJugador": 47074177
+      },
+      {
+        "NumeroTurno": 2,
+        "DniJugador": 47207090
+      }
+    ],
+    "Tablero": [
+      {
+        "NumeroCasillero": 0,
+        "TipoCasillero": "inicio",
+        "NombreProvincia": "Salida",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 1,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Buenos Aires",
+        "PrecioCompra": 300000,
+        "PrecioAlquiler": 25000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 2,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Catamarca",
+        "PrecioCompra": 120000,
+        "PrecioAlquiler": 10000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 3,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Chaco",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 4,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 5000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 5,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Chubut",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 6,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Córdoba",
+        "PrecioCompra": 250000,
+        "PrecioAlquiler": 20000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 7,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Corrientes",
+        "PrecioCompra": 160000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 8,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 10000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 9,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Entre Ríos",
+        "PrecioCompra": 170000,
+        "PrecioAlquiler": 14000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 10,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Formosa",
+        "PrecioCompra": 130000,
+        "PrecioAlquiler": 11000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 11,
+        "TipoCasillero": "premio",
+        "NombreProvincia": "Premio Banco",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 50000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 12,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Jujuy",
+        "PrecioCompra": 140000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 13,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "La Pampa",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 14,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 15000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 15,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "La Rioja",
+        "PrecioCompra": 125000,
+        "PrecioAlquiler": 10000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 16,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Mendoza",
+        "PrecioCompra": 220000,
+        "PrecioAlquiler": 18000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 17,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Misiones",
+        "PrecioCompra": 160000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 18,
+        "TipoCasillero": "premio",
+        "NombreProvincia": "Premio Banco",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 100000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 19,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Neuquén",
+        "PrecioCompra": 200000,
+        "PrecioAlquiler": 17000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 20,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Río Negro",
+        "PrecioCompra": 190000,
+        "PrecioAlquiler": 16000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 21,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 20000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 22,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Salta",
+        "PrecioCompra": 140000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 23,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "San Juan",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 24,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "San Luis",
+        "PrecioCompra": 170000,
+        "PrecioAlquiler": 14000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 25,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 25000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 26,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santa Cruz",
+        "PrecioCompra": 200000,
+        "PrecioAlquiler": 17000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 27,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santa Fe",
+        "PrecioCompra": 240000,
+        "PrecioAlquiler": 20000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 28,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santiago del Estero",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 29,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Tierra del Fuego",
+        "PrecioCompra": 210000,
+        "PrecioAlquiler": 18000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 30,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Tucumán",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      }
+    ],
+    "ListaDni": [
+      47074177,
+      47207090
+    ],
+    "DniGanador": null,
+    "MotivoVictoria": null
+  },
+  {
+    "NumeroPartida": 9,
+    "FechaInicio": "2025-10-23T18:46:35.7758636-03:00",
+    "FechaFin": null,
+    "Duracion": null,
+    "Estado": 1,
+    "TurnoActual": 47207090,
+    "ConfiguracionTurnos": [
+      {
+        "NumeroTurno": 2,
+        "DniJugador": 47207090
+      },
+      {
+        "NumeroTurno": 1,
+        "DniJugador": 47074177
+      }
+    ],
+    "Tablero": [
+      {
+        "NumeroCasillero": 0,
+        "TipoCasillero": "inicio",
+        "NombreProvincia": "Salida",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 1,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Buenos Aires",
+        "PrecioCompra": 300000,
+        "PrecioAlquiler": 25000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 2,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Catamarca",
+        "PrecioCompra": 120000,
+        "PrecioAlquiler": 10000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 3,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Chaco",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 4,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 5000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 5,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Chubut",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 6,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Córdoba",
+        "PrecioCompra": 250000,
+        "PrecioAlquiler": 20000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 7,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Corrientes",
+        "PrecioCompra": 160000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 8,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 10000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 9,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Entre Ríos",
+        "PrecioCompra": 170000,
+        "PrecioAlquiler": 14000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 10,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Formosa",
+        "PrecioCompra": 130000,
+        "PrecioAlquiler": 11000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 11,
+        "TipoCasillero": "premio",
+        "NombreProvincia": "Premio Banco",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 50000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 12,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Jujuy",
+        "PrecioCompra": 140000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 13,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "La Pampa",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 14,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 15000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 15,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "La Rioja",
+        "PrecioCompra": 125000,
+        "PrecioAlquiler": 10000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 16,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Mendoza",
+        "PrecioCompra": 220000,
+        "PrecioAlquiler": 18000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 17,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Misiones",
+        "PrecioCompra": 160000,
+        "PrecioAlquiler": 13000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 18,
+        "TipoCasillero": "premio",
+        "NombreProvincia": "Premio Banco",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 100000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 19,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Neuquén",
+        "PrecioCompra": 200000,
+        "PrecioAlquiler": 17000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 20,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Río Negro",
+        "PrecioCompra": 190000,
+        "PrecioAlquiler": 16000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 21,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 20000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 22,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Salta",
+        "PrecioCompra": 140000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 23,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "San Juan",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 24,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "San Luis",
+        "PrecioCompra": 170000,
+        "PrecioAlquiler": 14000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 25,
+        "TipoCasillero": "multa",
+        "NombreProvincia": "Multa",
+        "PrecioCompra": 0,
+        "PrecioAlquiler": 0,
+        "Monto": 25000,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 26,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santa Cruz",
+        "PrecioCompra": 200000,
+        "PrecioAlquiler": 17000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 27,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santa Fe",
+        "PrecioCompra": 240000,
+        "PrecioAlquiler": 20000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 28,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Santiago del Estero",
+        "PrecioCompra": 150000,
+        "PrecioAlquiler": 12000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 29,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Tierra del Fuego",
+        "PrecioCompra": 210000,
+        "PrecioAlquiler": 18000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      },
+      {
+        "NumeroCasillero": 30,
+        "TipoCasillero": "provincia",
+        "NombreProvincia": "Tucumán",
+        "PrecioCompra": 180000,
+        "PrecioAlquiler": 15000,
+        "Monto": 0,
+        "DniPropietarioActual": 0
+      }
+    ],
+    "ListaDni": [
+      47074177,
+      47207090
+    ],
+    "DniGanador": null,
+    "MotivoVictoria": null
   }
 ]

@@ -85,17 +85,16 @@ async function inicializarPartida() {
         crearTablero();
         actualizarPosicionesJugadores();
         configurarEventosPartida(idPartida);
-        cargarDetallesJugadores(idPartida); // Pasamos el ID aquí también
+        cargarDetallesJugadores(idPartida);
     } catch (error) {
         console.error('Error al inicializar partida:', error);
         alert(`Error al cargar la partida: ${error.message}`);
     }
 }
 
-// La función ahora recibe el ID como parámetro
+// La función el ID como parámetro
 async function cargarPartidaCompleta(idPartida) {
     try {
-        // ✨ CORRECCIÓN #3: Usamos el parámetro 'idPartida' en lugar de la variable global
         const response = await fetch(`${API_BASE_URL}/Partida/${idPartida}`);
         
         if (!response.ok) {
@@ -111,8 +110,6 @@ async function cargarPartidaCompleta(idPartida) {
         partidaActual = apiResponse.data;
         detallesJugadores = partidaActual.detallesJugadores || [];
         detallesJugadores.sort((a, b) => a.dniUsuario.localeCompare (b.dniUsuario) );
-
-        // Actualizar la interfaz con los datos frescos
         actualizarInterfazPartida();
         actualizarPosicionesJugadores();
         actualizarInterfaz();
@@ -123,26 +120,11 @@ async function cargarPartidaCompleta(idPartida) {
         throw error;
     }
 }
-
-// Asegúrate de que las otras funciones que usan el ID también lo reciban
-/*
-function configurarEventosPartida(idPartida) {
-    document.getElementById('btnLanzarDado').addEventListener('click', () => lanzarDado(idPartida));
-    // ... y así con el resto de los botones (pausar, reanudar, etc.)
-    document.getElementById('btnPausar').addEventListener('click', () => pausarPartida(idPartida));
-    document.getElementById('btnReanudar').addEventListener('click', () => reanudarPartida(idPartida));
-    document.getElementById('btnSuspender').addEventListener('click', () => suspenderPartida(idPartida));
-}
-    */
-// ... (El resto de tus funciones como crearTablero, etc. pueden quedar como estaban) ...
-//Analizar 
 async function cargarDetallesJugadores(idPartida) {
     if (!idPartida) {
         return;
     }
-    
     try {
-        // Usar el nuevo endpoint para obtener todos los detalles de la partida
         const response = await fetch(`${API_BASE_URL}/Partida/ObtenerDetallesJugadores/${idPartida}`, {
             method: 'GET',
             headers: {
@@ -153,8 +135,6 @@ async function cargarDetallesJugadores(idPartida) {
         if (response.ok) {
             const apiResponse = await response.json();
                 if (apiResponse.success) {
-                // Ordenar jugadores por DNI para mantener orden consistente en pantalla
-               // detallesJugadores = apiResponse.data.sort((a, b) => a.dniUsuario.localeCompare(b.dniUsuario));
                detallesJugadores = apiResponse.data.sort((a, b) => a.dniUsuario - b.dniUsuario);
                actualizarInterfaz();
                actualizarPosicionesJugadores();
@@ -171,9 +151,6 @@ async function cargarDetallesJugadores(idPartida) {
         detallesJugadores = [];
 }
 }
-
-
-
 function actualizarInterfazPartida() {
     if (!partidaActual) return;
     
@@ -187,9 +164,13 @@ function actualizarInterfazPartida() {
         
         const jugador1 = turnosOrdenados[0];
         const jugador2 = turnosOrdenados[1] || turnosOrdenados[0];
+        const jugador3 = turnosOrdenados[1] || turnosOrdenados[0] || turnosOrdenados[2];
+        const jugador4 = turnosOrdenados[1] || turnosOrdenados[0] || turnosOrdenados[2] || turnosOrdenados[3];
         
         document.getElementById('nombreJugador1').textContent = `Jugador ${jugador1.dniJugador}`;
         document.getElementById('nombreJugador2').textContent = `Jugador ${jugador2.dniJugador}`;
+        document.getElementById('nombreJugador3').textContent = `Jugador ${jugador3.dniJugador}`;
+        document.getElementById('nombreJugador4').textContent = `Jugador ${jugador4.dniJugador}`;
     }
     
     // Actualizar estado de la partida
@@ -202,17 +183,17 @@ function actualizarEstadoPartida(estado) {
     const btnReanudar = document.getElementById('btnReanudar');
     
     if (estado === 'EnJuego') {
-        //DESABILITAR LO QUE SEA NECESARIO
+        //DESHABILITAR LO QUE SEA NECESARIO
         btnLanzarDado.disabled = false;
         btnPausar.disabled = false; 
         btnReanudar.disabled = true;
     } else if (estado === 'Pausada') {
-        //DESABILITAR LO QUE SEA NECESARIO
+        //DESHABILITAR LO QUE SEA NECESARIO
         btnLanzarDado.disabled = true; 
         btnPausar.disabled = true;
         btnReanudar.disabled = false;
     } else if (estado === 'Suspendida' || estado === 'Finalizada') {
-        //DESABILITAR LO QUE SEA NECESARIO
+        //DESHABILITAR LO QUE SEA NECESARIO
         btnLanzarDado.disabled = true; 
         btnPausar.disabled = true; 
         btnReanudar.disabled = true;
@@ -270,10 +251,9 @@ async function lanzarDado() {
     }
     
     try {
-        // Llamar a la API para lanzar el dado
         console.log("ID PARTIDA:", idPartida);
         const response = await fetch(`http://localhost:5070/Partida/LanzarDado/${idPartida}`, {
-            method: /*'POST'*/ 'PUT',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -292,21 +272,13 @@ async function lanzarDado() {
          if (apiResponse.winner) {
             await cargarPartidaCompleta(idPartida);
             actualizarEstadoPartida('Finalizada');
-            /*document.getElementById('btnLanzarDado').disabled = true; 
-            document.getElementById('btnPausar').disabled = true; 
-            document.getElementById('btnReanudar').disabled =true;*/   
             alert(`PARTIDA FINALIZADA: el dni numero ${apiResponse.dniwinner} gano`)
             return;
-
         }
-
         if (!apiResponse.success) {
             alert(`ERROR: ${apiResponse.message || 'Error al lanzar el dado'}`);
             return;
         }
-
-        
-        
         // La respuesta contiene la información del dado lanzado
         const resultadoDado = apiResponse.data;
         
@@ -346,8 +318,6 @@ function actualizarPosicionesJugadores() {
             jugadoresEnCasillero.innerHTML = '';
         }
     }
-    
-    // Posicionar jugadores usando los detalles cargados desde la API
     detallesJugadores.forEach((detalleJugador, index) => {
         const casillero = document.getElementById(`casillero-${detalleJugador.posicionActual}`);
         const jugadoresEnCasillero = document.getElementById(`jugadores-${detalleJugador.posicionActual}`);
@@ -456,16 +426,15 @@ async function pausarPartida(idPartida) {
                 alert('Error al pausar la partida: ' + apiResponse.message);
             }
         } else {
-            alert('Errorr al pausar la partida');
+            alert('Error al pausar la partida');
         }
     } catch (error) {
         console.error('Error al pausar partida:', error);
-        alert('Erroor al pausar la partida');
+        alert('Error al pausar la partida');
     }
 }
 
 async function reanudarPartida(idPartida) {
-   
     try {
         const response = await fetch(`${API_BASE_URL}/Partida/ContinuarPartida/${idPartida}`, {
             method: 'PUT',
@@ -473,7 +442,6 @@ async function reanudarPartida(idPartida) {
                 'Content-Type': 'application/json',
             }
         });
-        
         if (response.ok) {
             const apiResponse = await response.json();
             if (apiResponse.success) {
@@ -511,14 +479,9 @@ async function suspenderPartida(idPartida) {
                     // Recargar la partida para obtener el estado actualizado
                     await cargarPartidaCompleta(idPartida);
                     document.getElementById('btnLanzarDado').disabled = true; 
-                document.getElementById('btnPausar').disabled = true; 
-                document.getElementById('btnReanudar').disabled =true;
+                    document.getElementById('btnPausar').disabled = true; 
+                    document.getElementById('btnReanudar').disabled =true;
                     alert('Partida suspendida, el ganador es  '  + apiResponse.dniwinner);
-                    
-                    // Mostrar ganador si hay uno
-                    /*if (partidaActual && partidaActual.dniGanador) {
-                        alert(¡Partida finalizada! El ganador es: ${partidaActual.dniGanador});
-                    }*/
                 } else {
                     alert('Erroor al suspender la partida: ' + apiResponse.message);
                 }

@@ -89,12 +89,12 @@ function inicializarInicio() {
         actualizarSelectoresJugadores();
     });
 }
-
-// Reemplaza tu función actual con esta en script-index.js
 async function crearNuevaPartida() {
     limpiarErrores(); // Limpiar errores al inicio
     const dniJugador1 = document.getElementById('dniJugador1').value;
     const dniJugador2 = document.getElementById('dniJugador2').value;
+    const dniJugador3 = document.getElementById('dniJugador3').value;
+    const dniJugador4 = document.getElementById('dniJugador4').value;
 
     // --- Validaciones ---
     let esValido = true;
@@ -110,15 +110,26 @@ async function crearNuevaPartida() {
         mostrarErrorCampo('errorDni2', 'Los jugadores deben ser diferentes.');
         esValido = false;
     }
+    if(dniJugador3 && dniJugador3 === dniJugador1 || dniJugador3 && dniJugador3 == dniJugador2){
+         mostrarErrorCampo('errorDni3', 'Los jugadores deben ser diferentes.');
+        esValido = false;
+    }
+    if(dniJugador4 && dniJugador4 === dniJugador1 || dniJugador4 && dniJugador4 == dniJugador2||dniJugador4 && dniJugador4 === dniJugador3){
+         mostrarErrorCampo('errorDni4', 'Los jugadores deben ser diferentes.');
+        esValido = false;
+    }
 
     if (!esValido) return; // Si no es válido, no continuamos
+    // Crear un array con los jugadores
+    const dnis = [dniJugador1, dniJugador2, dniJugador3, dniJugador4].filter(dni => dni && dni.trim() !== "");
 
+    const body = JSON.stringify({ dnis });
     try {
         const response = await fetch(`${API_BASE_URL}/Partida`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                dnis: [dniJugador1, dniJugador2]
+                dnis
             })
         });
         
@@ -144,9 +155,6 @@ async function crearNuevaPartida() {
 
 async function continuarPartida() {
     const numeroPartida = document.getElementById('numeroPartida').value;
-    
-    //SE PUEDEN REALIZAR VALIDACIONES DEL NUMERO DE PARTIDA
-        
     try {
         // Verificar que la partida existe
         const response = await fetch(`${API_BASE_URL}/Partida/ReanudarPartida?numeroPartida=${numeroPartida}`, {
@@ -167,7 +175,6 @@ async function continuarPartida() {
         } else if (response.status === 404) {
            alert('Error al buscar la partida: ' + apiResponse.message);
         } else {
-            //COMPLETAR CODIGO PARA MANEJO DE ERROR
             alert(apiResponse.message)
         }
         
@@ -181,6 +188,8 @@ function actualizarSelectoresJugadores() {
     const selects = [
         document.getElementById('dniJugador1'),
         document.getElementById('dniJugador2'),
+        document.getElementById('dniJugador3'),
+        document.getElementById('dniJugador4')
     ];
 
     selects.forEach((select, i) => {
@@ -196,7 +205,7 @@ function actualizarSelectoresJugadores() {
         jugadoresRegistrados.forEach(jugador => {
             const opcion = document.createElement('option');
             opcion.value = jugador.dni;
-            opcion.textContent = `${jugador.nombre} ${jugador.apellido}`;
+            opcion.textContent = `${jugador.nombre} ${jugador.dni}`;
             select.appendChild(opcion);
         });
     });

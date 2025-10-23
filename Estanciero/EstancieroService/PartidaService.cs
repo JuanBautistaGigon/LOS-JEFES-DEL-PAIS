@@ -161,7 +161,7 @@ namespace EstancieroService
                 return new Resultado<int> { Exito = true, Mensaje = "Estado modificado exitosamente", tipoStatusCode = TipoStatusCode.Ok };
             }
             return new Resultado<int> { Exito = false, Mensaje = "No se econtro una partida con ese número", tipoStatusCode = TipoStatusCode.NotFound };
-        } //sumar en estado pausado //
+        } 
 
         public Resultado<int> FinalizarPartida(int numeroPartida)
         {
@@ -290,7 +290,7 @@ namespace EstancieroService
             return movimiento;
         }
 
-        private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino, int nPartida) // preguntar si puede llegar como parametro el casillero,
+        private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino, int nPartida) 
         {
             MovimientoResponse movimientoResponse = new MovimientoResponse();
 
@@ -401,14 +401,11 @@ namespace EstancieroService
                 ListaDni = request.Dnis
             };
         }
+
         public List<PartidaEntities> ObtenerPartida()
         {
             List<PartidaEntities> listaPartidas = Archivos.DeserealizarJson<PartidaEntities>(Rutas.ObtenerRuta("partida"));
             return listaPartidas;
         }
     }
-    /*Cosas a implementar Dia Martes:
-     1. Si el saldoActual del usuario en la partida es menor al alquiler que debe pagar, se debe cambiar su estado en la partida (En juego a Derrotado)
-     2. Gestión de turnos, realizar un contador para configurar los turnos, dar de baja de la lista de jugadores en la partida a los usuarios derrotados (Ver si usar remove o poner un if(si usuario.Estado == Derrotado)))
-     3. Tema turnos, ver si usar el metodo BuscarGanador constantemente o buscar otra soluciones*/
 }

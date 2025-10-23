@@ -20,6 +20,5 @@ namespace EstancieroResponse
         public string SiguienteTurno { get; set; }
         public bool Termino { get; set; }
         public int Ganador {  get; set; }
-        public int Perdedor { get; set; }
     }
 }

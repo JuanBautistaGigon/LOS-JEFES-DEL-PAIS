@@ -78,7 +78,7 @@ namespace EstancieroService
             {
                 return new MovimientoResponse { Success = false, Descripcion = $"No se encontró la partida número {numeroPartida}." };
             }
-            MovimientoResponse resultado = LanzarDado(partida);
+            MovimientoResponse resultado = LanzarDado(numeroPartida);
             //Acomodar para siguiente turno
             TurnoEntities turnoActual = partida.ConfiguracionTurnos[0];
             partida.ConfiguracionTurnos.RemoveAt(0);
@@ -98,7 +98,8 @@ namespace EstancieroService
                 NumeroDado = resultado.NumeroDado,
                 Descripcion = "Movimiento realizado correctamente.",
                 SiguienteTurno = $"El siguiente turno es del jugador con DNI: {partida.TurnoActual}",
-                Ganador = resultado.Ganador
+                Ganador = resultado.Ganador,
+                Termino = resultado.Termino
                 
             };
         }
@@ -256,12 +257,16 @@ namespace EstancieroService
             return new Resultado<int> { Exito = false, Mensaje = $"El jugador {dniUsuarioGanador} ha ganado la partida por poseer el mayor saldo", Ganador = true, DniGanador = dniUsuarioGanador, tipoStatusCode = TipoStatusCode.Ok,  }; //Utilizar el false para que se pueda diferenciar en "LanzarDado"
         }
 
-        private MovimientoResponse LanzarDado(PartidaEntities partidaActual)
+        private MovimientoResponse LanzarDado(int numeroPartida)
         {
+            string rutapartida = Rutas.ObtenerRuta("partida");
             string rutadetalle = Rutas.ObtenerRuta("detalleUsuario");
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutadetalle);
+            PartidaEntities partidaActual = Archivos.DeserealizarJson<PartidaEntities>(rutapartida).FirstOrDefault(x => x.NumeroPartida == numeroPartida);
 
-            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == partidaActual.TurnoActual);
+            List<DetalleUsuarioEntities> listaDetalleUsuarioAmodificar = listaDetalleUsuario.FindAll(x => x.DniUsuario == partidaActual.TurnoActual);
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuarioAmodificar.FirstOrDefault(s=> s.NumeroPartida == numeroPartida);
+
 
             int casilleroDestino = 0;
             int casillerosTotales = 30;
@@ -278,14 +283,14 @@ namespace EstancieroService
                 //casilleroDestino = (casilleroActual + numeroDado) % casillerosTotales;
                 casilleroDestino = casilleroDestino - casillerosTotales - 1;
             }
-            MovimientoResponse movimiento = MoverJugador(detalleUsuarioAmodificar.DniUsuario, casilleroDestino);
+            MovimientoResponse movimiento = MoverJugador(detalleUsuarioAmodificar.DniUsuario, casilleroDestino, numeroPartida);
             movimiento.NumeroDado = numeroDado;
             movimiento.CasilleroDestino = casilleroDestino;
 
             return movimiento;
         }
 
-        private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino) // preguntar si puede llegar como parametro el casillero,
+        private MovimientoResponse MoverJugador(int dniJugador, int casilleroDestino, int nPartida) // preguntar si puede llegar como parametro el casillero,
         {
             MovimientoResponse movimientoResponse = new MovimientoResponse();
 
@@ -294,7 +299,7 @@ namespace EstancieroService
 
             List<DetalleUsuarioEntities> listaDetalleUsuario = Archivos.DeserealizarJson<DetalleUsuarioEntities>(rutaDetalleUsuario);
 
-            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador);
+            DetalleUsuarioEntities detalleUsuarioAmodificar = listaDetalleUsuario.FirstOrDefault(x => x.DniUsuario == dniJugador && x.NumeroPartida == nPartida);
             PartidaEntities partidaActual = Archivos.DeserealizarJson<PartidaEntities>(rutaPartida).FirstOrDefault(x => x.NumeroPartida == detalleUsuarioAmodificar.NumeroPartida);
 
             if (detalleUsuarioAmodificar is not null)
@@ -365,6 +370,7 @@ namespace EstancieroService
                     movimientoResponse.Ganador = result.DniGanador;
                     movimientoResponse.Success = result.Ganador;
                     movimientoResponse.Descripcion = result.Mensaje;
+                    movimientoResponse.Termino = result.Ganador;
                 }
 
                 //Posible perdida de jugador

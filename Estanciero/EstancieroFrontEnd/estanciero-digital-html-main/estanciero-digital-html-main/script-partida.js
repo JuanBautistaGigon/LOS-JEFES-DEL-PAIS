@@ -109,8 +109,8 @@ async function cargarPartidaCompleta(idPartida) {
         }
 
         partidaActual = apiResponse.data;
-        detallesJugadores = partidaActual.detallesJugadores || [];
-        detallesJugadores.sort((a, b) => a.dniJugador.localeCompare(b.dniJugador));
+        detallesJugadores = partidaActual.listaDni || [];
+        detallesJugadores.sort((a, b) => a == b );
 
         // Actualizar la interfaz con los datos frescos
         actualizarInterfazPartida();
@@ -275,7 +275,6 @@ async function lanzarDado() {
                 'Content-Type': 'application/json',
             }
         });
-
        
         
         if (!response.ok) {
@@ -289,10 +288,12 @@ async function lanzarDado() {
 
          if (apiResponse.winner) {
             await cargarPartidaCompleta(idPartida);
-                document.getElementById('btnLanzarDado').disabled = true; 
-                document.getElementById('btnPausar').disabled = true; 
-                document.getElementById('btnReanudar').disabled =true;   
+            actualizarEstadoPartida('Finalizada');
+            /*document.getElementById('btnLanzarDado').disabled = true; 
+            document.getElementById('btnPausar').disabled = true; 
+            document.getElementById('btnReanudar').disabled =true;*/   
             alert(`PARTIDA FINALIZADA: el dni numero ${apiResponse.dniwinner} gano`)
+            return;
 
         }
 
@@ -353,7 +354,7 @@ function actualizarPosicionesJugadores() {
             const esTurnoActual = partidaActual && 
                                 partidaActual.configuracionTurnos && 
                                 partidaActual.configuracionTurnos[partidaActual.turnoActual - 1] &&
-                                partidaActual.configuracionTurnos[partidaActual.turnoActual - 1].dniJugador === detalleJugador.dniJugador;
+                                (int)(partidaActual.configuracionTurnos[partidaActual.turnoActual - 1].dniUsuario) === (int)(detalleJugador.dniUsario);
             
             // Asignar color fijo por jugador (basado en el orden de creación)
             let colorFondo;
@@ -361,8 +362,8 @@ function actualizarPosicionesJugadores() {
                 colorFondo = '#3498db'; // Azul para el jugador que tiene el turno
             } else {
                 // Colores fijos por jugador (basado en el índice en la configuración de turnos ordenada por DNI)
-                const turnosOrdenados = [...partidaActual.configuracionTurnos].sort((a, b) => a.dniJugador.localeCompare(b.dniJugador));
-                const indiceJugador = turnosOrdenados.findIndex(t => t.dniJugador === detalleJugador.dniJugador);
+                const turnosOrdenados = [...partidaActual.configuracionTurnos].sort((a, b) => (int)(a.dniUsuario).localeCompare((int)(b.dniUsuario)));
+                const indiceJugador = turnosOrdenados.findIndex(t => (int)(t.dniUsuario) == (int)(detalleJugador.dniUsuario));
                 switch (indiceJugador) {
                     case 0:
                         colorFondo = '#e74c3c'; // Rojo para jugador 1
@@ -382,11 +383,11 @@ function actualizarPosicionesJugadores() {
             }
             
             const indicador = document.createElement('div');
-            indicador.className = `indicador-jugador`;
+            indicador.className = indicador-jugador;
             indicador.textContent = detalleJugador.dniJugador;
             indicador.style.cssText = `
                 background-color: ${colorFondo};
-                color: white;
+                color: black;
                 border-radius: 8px;
                 padding: 4px 8px;
                 min-width: 60px;
@@ -397,7 +398,7 @@ function actualizarPosicionesJugadores() {
                 font-size: 10px;
                 font-weight: bold;
                 white-space: nowrap;
-                border: ${esTurnoActual ? '2px solid #2980b9' : 'none'};
+                border: ${esTurnoActual ? '2px solid #c00000ff' : 'black'};
             `;
             
             jugadoresEnCasillero.appendChild(indicador);
@@ -511,7 +512,7 @@ async function suspenderPartida(idPartida) {
                     
                     // Mostrar ganador si hay uno
                     /*if (partidaActual && partidaActual.dniGanador) {
-                        alert(`¡Partida finalizada! El ganador es: ${partidaActual.dniGanador}`);
+                        alert(¡Partida finalizada! El ganador es: ${partidaActual.dniGanador});
                     }*/
                 } else {
                     alert('Erroor al suspender la partida: ' + apiResponse.message);
@@ -528,5 +529,5 @@ async function suspenderPartida(idPartida) {
 
 // Función para regresar al inicio
 function regresarAlInicio() {
-    window.location.href = 'index.html';
+    window.location.href = 'index.html';
 }

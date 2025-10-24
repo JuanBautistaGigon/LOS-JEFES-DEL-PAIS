@@ -14,19 +14,6 @@
   },
   {
     "Dni": 47207090,
-    "Nombre": "Facu2",
-    "Email": "Facu2@gmail",
-    "FechaRegistro": "2025-10-07T13:55:06.7710211-03:00",
-    "FechaEliminacion": "2025-10-07T14:01:39.0003169-03:00",
-    "EstadisticasJugador": {
-      "PartidasJugadas": 33,
-      "PartidasGanadas": 0,
-      "PartidasPerdidas": 33,
-      "PartidasPendientes": 0
-    }
-  },
-  {
-    "Dni": 47207090,
     "Nombre": "Facu",
     "Email": "Facu@gmail",
     "FechaRegistro": "2025-10-07T13:55:21.1828993-03:00",
@@ -52,10 +39,10 @@
     }
   },
   {
-    "Dni": 100000000,
-    "Nombre": "string",
-    "Email": "user@example.com",
-    "FechaRegistro": "2025-10-14T14:33:01.5163454-03:00",
+    "Dni": 45200900,
+    "Nombre": "Tomas",
+    "Email": "tomas@gmail.com",
+    "FechaRegistro": "2025-10-14T19:27:09.4359826-03:00",
     "FechaEliminacion": null,
     "EstadisticasJugador": {
       "PartidasJugadas": 0,
@@ -65,9 +52,9 @@
     }
   },
   {
-    "Dni": 45200900,
-    "Nombre": "baulo",
-    "Email": "baulo@gmail.com",
+    "Dni": 44204092,
+    "Nombre": "Santi",
+    "Email": "santi@gmail.com",
     "FechaRegistro": "2025-10-14T19:27:09.4359826-03:00",
     "FechaEliminacion": null,
     "EstadisticasJugador": {

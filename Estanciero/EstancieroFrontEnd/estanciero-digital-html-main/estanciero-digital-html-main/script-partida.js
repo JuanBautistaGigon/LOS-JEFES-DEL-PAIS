@@ -7,6 +7,40 @@ let jugadoresRegistrados = [];
 let numeroPartidaActual = null;
 let detallesJugadores = [];
 
+const NOMBRES_CASILLEROS = [
+    "Inicio", 
+    "Provincia de Buenos Aires",
+    "Provincia de Catamarca",
+    "Provincia del Chaco",
+    "MULTA!",
+    "Provincia de Chubut",
+    "Provincia de Cordoba",
+    "Provincia de Corrientes",
+    "MULTA!",
+    "Provincia de Entre Rios",
+    "Provincia de Formosa", 
+    "PREMIO!",
+    "Provincia de Jujuy",
+    "Provincia de La Pampa",
+    "MULTA!",
+    "Provincia de La Rioja",
+    "Provincia de Mendoza",
+    "Provincia de Misiones",
+    "PREMIO!",
+    "Provincia de Neuquen",
+    "Provincia de Rio Negro",
+    "MULTA!",
+    "Provincia de Salta",
+    "Provincia de San Juan",
+    "Provincia de San Luis",
+    "MULTA!",
+    "Provincia de Santa Cruz",
+    "Provincia de Santa Fe",
+    "Provincia de Santiago del Estero",
+    "Provincia de Tierra del Fuego",
+    "Provincia de Tucuman" 
+];
+
 const API_BASE_URL = 'http://localhost:5070';
 
 // Funciones de utilidad
@@ -208,7 +242,7 @@ function crearTablero() {
     for (let i = 1; i <= 30; i++) {
         const casillero = document.createElement('div');
         casillero.className = 'casillero';
-        casillero.id = `casillero-${i}`;
+        casillero.id = `casillero-${i}`; // <- backticks
         
         const numero = document.createElement('span');
         numero.className = 'numero-casillero';
@@ -216,16 +250,23 @@ function crearTablero() {
         
         const jugadoresEnCasillero = document.createElement('div');
         jugadoresEnCasillero.className = 'jugadores-en-casillero';
-        jugadoresEnCasillero.id = `jugadores-${i}`;
+        jugadoresEnCasillero.id = `jugadores-${i}`; // <- backticks
+
+        const textoCasillero = document.createElement('div');
+        textoCasillero.className = 'texto-casillero';
+        textoCasillero.textContent = NOMBRES_CASILLEROS[i] || `Casillero ${i}`; // <- backticks y sin llaves
         
         casillero.appendChild(numero);
         casillero.appendChild(jugadoresEnCasillero);
+        casillero.appendChild(textoCasillero); // <- mover aquí antes de append a grid
         casillerosGrid.appendChild(casillero);
     }
     
     // Posicionar jugadores en el casillero inicial
     actualizarPosicionesJugadores();
 }
+
+
 
 function configurarEventosPartida(idPartida) {
     // Botón lanzar dado

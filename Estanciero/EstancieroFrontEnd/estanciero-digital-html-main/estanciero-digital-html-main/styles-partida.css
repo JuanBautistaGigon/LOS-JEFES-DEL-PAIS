@@ -143,14 +143,16 @@ footer {
 }
 .casilleros-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    /* Define 6 columnas con el ancho fijo del casillero para controlar el ancho total */
+    grid-template-columns: repeat(6, 170px); 
     gap: 10px;
-    max-width: 600px;
-    width: 100%;
+    /* Centra el grid horizontalmente dentro de su padre */
+    margin: 0 auto; 
 }
+
 .casillero {
-    width: 80px;
-    height: 60px;
+    width: 170px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -160,7 +162,18 @@ footer {
     text-align: center;
     background-color: #95b6f9;
     border: 2px solid gray;
+    display:block;
+    gap:20px;
 }
+
+.texto-casillero {
+    font-size: 14px; /* Un poco más grande que el número */
+    font-weight: bold;
+    margin-top: 5px; /* Separación del número de casillero */
+    text-transform: uppercase;
+    color: #333; /* Color oscuro para el texto */
+}
+
 .casillero:hover {
     background-color: #cdeff1;
 }

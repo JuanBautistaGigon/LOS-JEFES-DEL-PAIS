@@ -196,12 +196,13 @@ function actualizarInterfazPartida() {
     if (partidaActual.configuracionTurnos && partidaActual.configuracionTurnos.length > 0) {
         // Ordenar configuración de turnos por DNI para mantener orden consistente
         const turnosOrdenados = [...partidaActual.configuracionTurnos].sort((a, b) => String(a.dniJugador).localeCompare(String(b.dniJugador)));
-        
-        const jugador1 = turnosOrdenados[0];
-        const jugador2 = turnosOrdenados[1] || null;
-        const jugador3 = turnosOrdenados[2] || null;
-        const jugador4 = turnosOrdenados[3] || null;
-
+    // Asigna los jugadores a sus posiciones según el orden obtenido
+    const jugador1 = turnosOrdenados[0];
+    const jugador2 = turnosOrdenados[1] || null; // Si no hay jugador 2, queda vacío
+    const jugador3 = turnosOrdenados[2] || null; // Si no hay jugador 3, queda vacío
+    const jugador4 = turnosOrdenados[3] || null; // Si no hay jugador 4, queda vacío
+    
+    // Si falta algún jugador, muestra un texto genérico
     document.getElementById('nombreJugador1').textContent = jugador1 ? `Jugador ${jugador1.dniJugador}` : 'Jugador 1';
     document.getElementById('nombreJugador2').textContent = jugador2 ? `Jugador ${jugador2.dniJugador}` : 'Jugador 2';
     document.getElementById('nombreJugador3').textContent = jugador3 ? `Jugador ${jugador3.dniJugador}` : 'Jugador 3';
